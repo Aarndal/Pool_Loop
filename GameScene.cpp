@@ -8,35 +8,39 @@ GameScene::GameScene(olc::PixelGameEngine* engine) : m_engine{ engine }
 
 void GameScene::init()
 {
-	m_gravity = 10.0f;
-
-	PlayerData playerData{ 1, 10.0f, 5.0f, 20.0f };
+	PlayerData playerData{ 1, 10.0f, 10.0f, 40.0f };
 
 	if (!m_playerCharacter)
 	{
-		m_playerCharacter = { &playerData };
+		m_playerCharacter = { playerData };
 	}
 
-	m_playerCharacter->setIsFalling(false);
+	m_playerCharacter->init(m_startPosition);
 }
 
 void GameScene::update(float elapsedTime)
 {
 	m_engine->Clear(olc::VERY_DARK_BLUE);
 
+	// Move PlayerCharacter
 	if (m_playerCharacter->getIsFalling())
 	{
 		if (m_engine->GetKey(olc::Key::A).bHeld)
 		{
-			m_playerCharacter->move(elapsedTime, PlayerCharacter::Movement::LEFT);
+			m_playerCharacter->moveHorizontal(elapsedTime, PlayerCharacter::Movement::LEFT);
 		}
-
-		if (m_engine->GetKey(olc::Key::D).bHeld)
+		else if (m_engine->GetKey(olc::Key::D).bHeld)
 		{
-			m_playerCharacter->move(elapsedTime, PlayerCharacter::Movement::RIGHT);
+			m_playerCharacter->moveHorizontal(elapsedTime, PlayerCharacter::Movement::RIGHT);
+		}
+		else
+		{
+			m_playerCharacter->moveHorizontal(elapsedTime, PlayerCharacter::Movement::NONE);
 		}
 
-		m_pos += olc::vf2d{ 0,1 } *m_gravity * elapsedTime;
+		m_playerCharacter->moveVertical(elapsedTime, m_gravity);
+
+		m_playerCharacter->rotate(elapsedTime, *m_engine);
 	}
 	else
 	{
@@ -46,6 +50,7 @@ void GameScene::update(float elapsedTime)
 		}
 	}
 
-	olc::vf2d size{ 400.f,50.f };
-	m_engine->DrawRectDecal(m_pos, size, olc::RED);
+	// Draw PlayerCharacter
+	olc::vf2d size{ 50.f,100.f };
+	m_engine->DrawRectDecal(m_playerCharacter->getPosition(), size, olc::RED);
 }

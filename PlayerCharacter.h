@@ -6,7 +6,7 @@
 class PlayerCharacter
 {
 public:
-	PlayerCharacter(PlayerData* data) : m_data{ data }
+	PlayerCharacter(PlayerData data) : m_data{ data }
 	{
 	}
 
@@ -26,19 +26,29 @@ public:
 		RIGHT,
 	};
 
-	void setPosition(const olc::vf2d& position) { m_position = position; }
+	// Getters and Setters
+	olc::vf2d getPosition() const { return m_currentPosition; }
+	void setPosition(const olc::vf2d& position) { m_currentPosition = position; }
 
 	bool getIsFalling() const { return m_isFalling; }
 	void setIsFalling(bool isFalling) { m_isFalling = isFalling; }
 
-	olc::vf2d move(float elapsedTime, Movement moveDirection);
+	// Initialization methods
+	void init(const olc::vf2d& startPosition);
+
+	// Movement methods
+	olc::vf2d moveHorizontal(float elapsedTime, Movement moveDirection);
+	olc::vf2d moveVertical(float elapsedTime, float gravity);
+	float rotate(float elapsedTime, const olc::PixelGameEngine& engine);
 
 private:
+	PlayerData m_data;
+
 	bool m_isFalling{ false };
+	
+	float m_currentRotationAngle{ 0.0f};
 
-	PlayerData* m_data{};
-
-	olc::vf2d m_position{ 0.0f, 0.0f };
-	olc::vf2d m_velocity{ 0.0f, 0.0f };
+	olc::vf2d m_currentVelocity{ 0.0f, 0.0f };
+	olc::vf2d m_currentPosition{ 0.0f, 0.0f };
 };
 

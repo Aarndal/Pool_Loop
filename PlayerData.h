@@ -6,8 +6,6 @@ struct PlayerData
 
 public:
 	// Getters and Setters
-	
-	
 	unsigned int getId() const { return m_id; }
 	
 	float getMass() const { return m_mass; }
