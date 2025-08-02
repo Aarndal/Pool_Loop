@@ -1,7 +1,5 @@
 #pragma once
-
-#include "olcPixelGameEngine.h"
-#include "GameScene.h"
+#include <olcPixelGameEngine.h>
 
 class PoolLoopGameEngine : public olc::PixelGameEngine
 {
@@ -11,12 +9,6 @@ public:
 		sAppName = "PoolLoop";
 	}
 
-public:
 	bool OnUserCreate() override;
-
 	bool OnUserUpdate(float fElapsedTime) override;
-
-private:
-	GameScene gameScene{ this };
-
 };
