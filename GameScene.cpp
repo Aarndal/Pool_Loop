@@ -10,12 +10,21 @@ void GameScene::init()
 {
 	PlayerData playerData{ 1, 10.0f, 10.0f, 40.0f };
 
+	playerData.init(
+		{
+					"resources\\PC_Cat_00_Stretched.png",
+					"resources\\PC_Cat_00_Round.png"
+		}
+	);
+
 	if (!m_playerCharacter)
 	{
 		m_playerCharacter = { std::move(playerData) };
 	}
 
 	m_playerCharacter->init(m_startPosition);
+
+	m_background.Load("resources\\BG_Top.png");
 }
 
 void GameScene::update(float elapsedTime)
@@ -47,9 +56,10 @@ void GameScene::update(float elapsedTime)
 		m_playerCharacter->jump(*m_engine);
 	}
 
-	// Draw PlayerCharacter
+	// Draw
+	m_engine->DrawDecal({}, m_background.Decal());
+	m_playerCharacter->draw(*m_engine);
 
-
-	olc::vf2d size{ 50.f,100.f };
-	m_engine->DrawRectDecal(m_playerCharacter->getPosition(), size, olc::RED);
+	/*olc::vf2d size{ 50.f,100.f };
+	m_engine->DrawRectDecal(m_playerCharacter->getPosition(), size, olc::RED);*/
 }

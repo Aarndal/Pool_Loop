@@ -83,9 +83,13 @@ bool PlayerCharacter::draw(olc::PixelGameEngine& engine)
 			engine.DrawRotatedDecal(m_currentPosition, m_data.getImages()[1].Decal(), m_currentRotationAngle);
 
 		engine.DrawRotatedDecal(m_currentPosition, m_data.getImages()[0].Decal(), m_currentRotationAngle);
+
+		return true;
 	}
 
-	engine.DrawSprite(m_currentPosition, m_data.getImages()[0].Sprite());
+	//engine.DrawRotatedDecal(m_currentPosition, m_data.getImages()[0].Decal(), 0.0f);
+
+	engine.DrawDecal(m_currentPosition, m_data.getImages()[0].Decal());
 
 	return true;
 }
