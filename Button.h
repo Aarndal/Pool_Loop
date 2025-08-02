@@ -1,5 +1,6 @@
 #pragma once
 #include <limits>
+#include <variant>
 #include <olcPixelGameEngine.h>
 
 struct BoundingBox2D
@@ -16,26 +17,38 @@ inline bool isInside(const BoundingBox2D& bb, olc::vf2d point)
 		&& point.y > bb.min.y;
 }
 
-
+inline auto size(const BoundingBox2D& bb)
+{
+	return bb.max - bb.min;
+}
 
 class Button
 {
 public:
-	Button(BoundingBox2D bb, std::function<void()> action)
-		: 
-		m_bb{ bb }
+	Button(BoundingBox2D bb, std::filesystem::path path, std::function<void()> action)
+		: m_bb{ bb }
 		, m_action{ std::move(action) }
+		, m_image{ path }
 	{
 	}
 
+	void loadImage();
 	bool hit(olc::vf2d point)const;
 	void invoke() const;
-	void draw(olc::PixelGameEngine* pge) const;
 
+	enum class DrawingState
+	{
+		highlight,
+		pressed,
+		none
+	};
+	void draw(olc::PixelGameEngine* pge, DrawingState state = DrawingState::none) const;
+	bool m_bPressed{ false };
 private:
 	BoundingBox2D m_bb;
 	std::function<void()> m_action;
-	//olc::Renderable m_image;
+	std::variant< std::filesystem::path, olc::Renderable> m_image;
+
 };
 
 
