@@ -1,4 +1,5 @@
 #include "PlayerCharacter.h"
+#include "Camera.h"
 
 // Initialization methods
 void PlayerCharacter::init(const olc::vf2d& startPosition)
@@ -75,19 +76,19 @@ float PlayerCharacter::rotate(float elapsedTime, olc::PixelGameEngine& engine)
 	return m_currentRotationAngle;
 }
 
-bool PlayerCharacter::draw(olc::PixelGameEngine& engine)
+bool PlayerCharacter::draw(olc::PixelGameEngine& engine, const Camera& camera)
 {
 	if (m_isFalling)
 	{
 		if (m_isRotating)
-			engine.DrawPartialRotatedDecal(m_currentPosition, m_data.getImages()[1].Decal(), m_currentRotationAngle, { (float)m_data.getImages()[1].Sprite()->width, (float)m_data.getImages()[1].Sprite()->height }, {}, m_data.getImages()[1].Sprite()->Size());
+			engine.DrawPartialRotatedDecal(camera.transform(m_currentPosition), m_data.getImages()[1].Decal(), m_currentRotationAngle, { 0.5f*(float)m_data.getImages()[1].Sprite()->width,  0.5f * (float)m_data.getImages()[1].Sprite()->height }, {}, m_data.getImages()[1].Sprite()->Size());
 		else
-			engine.DrawPartialRotatedDecal(m_currentPosition, m_data.getImages()[0].Decal(), m_currentRotationAngle, { (float)m_data.getImages()[0].Sprite()->width, (float)m_data.getImages()[0].Sprite()->height }, {}, m_data.getImages()[0].Sprite()->Size());
+			engine.DrawPartialRotatedDecal(camera.transform(m_currentPosition), m_data.getImages()[0].Decal(), m_currentRotationAngle, { 0.5f * (float)m_data.getImages()[0].Sprite()->width,  0.5f * (float)m_data.getImages()[0].Sprite()->height }, {}, m_data.getImages()[0].Sprite()->Size());
 
 		return true;
 	}
 
-	engine.DrawDecal(m_currentPosition, m_data.getImages()[0].Decal());
+	engine.DrawDecal(camera.transform(m_currentPosition), m_data.getImages()[0].Decal());
 
 	return true;
 }

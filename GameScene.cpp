@@ -2,7 +2,16 @@
 #include "PlayerData.h"
 #include "PlayerCharacter.h"
 
-GameScene::GameScene(olc::PixelGameEngine* engine) : m_engine{ engine }
+namespace
+{
+	const auto cameraStartPos = [](olc::PixelGameEngine* engine) {return olc::vf2d{ 0.f, engine->GetScreenSize().y * -5.f }; };
+}
+
+
+GameScene::GameScene(olc::PixelGameEngine* engine) 
+	: m_engine{ engine }
+	, m_startPosition{ cameraStartPos(engine) + olc::vf2d{ 500.f,300.f } }
+	, camera{ cameraStartPos(engine)}
 {
 }
 
@@ -29,7 +38,8 @@ void GameScene::init()
 
 void GameScene::update(float elapsedTime)
 {
-	m_engine->Clear(olc::VERY_DARK_BLUE);
+	m_engine->Clear(olc::WHITE);
+	const auto playerheight = m_playerCharacter->getPosition().y;
 
 	// Move PlayerCharacter
 	if (m_playerCharacter->getIsFalling())
@@ -55,10 +65,10 @@ void GameScene::update(float elapsedTime)
 	{
 		m_playerCharacter->jump(*m_engine);
 	}
-
+	camera.move({ 0,m_playerCharacter->getPosition().y - playerheight });
 	// Draw
-	m_engine->DrawDecal({}, m_background.Decal());
-	m_playerCharacter->draw(*m_engine);
+	m_engine->DrawDecal(camera.transform(cameraStartPos(m_engine)), m_background.Decal());
+	m_playerCharacter->draw(*m_engine, camera);
 
 	/*olc::vf2d size{ 50.f,100.f };
 	m_engine->DrawRectDecal(m_playerCharacter->getPosition(), size, olc::RED);*/

@@ -4,6 +4,7 @@
 #include <olcPixelGameEngine.h>
 #include "IScene.h"
 #include "PlayerCharacter.h"
+#include "Camera.h"
 
 class GameScene : public IScene
 {
@@ -23,4 +24,6 @@ private:
 	std::optional<PlayerCharacter> m_playerCharacter{ };
 
 	float m_gravity{ 10.0f };
+
+	Camera camera;
 };

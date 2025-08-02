@@ -132,6 +132,7 @@
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CharacterSelection.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="olcPixelGameEngine.cpp" />
@@ -145,6 +146,7 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="CharacterSelection.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="IScene.h" />

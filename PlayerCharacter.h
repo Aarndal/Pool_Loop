@@ -4,6 +4,8 @@
 #include "PlayerData.h"
 #include "Animation.h"
 
+class Camera;
+
 class PlayerCharacter
 {
 public:
@@ -41,7 +43,7 @@ public:
 	olc::vf2d moveVertical(float elapsedTime, float gravity);
 	float rotate(float elapsedTime, olc::PixelGameEngine& engine);
 
-	bool draw(olc::PixelGameEngine& engine);
+	bool draw(olc::PixelGameEngine& engine, const Camera& camera);
 
 private:
 	PlayerData m_data;
