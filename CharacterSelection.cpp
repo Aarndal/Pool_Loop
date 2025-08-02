@@ -17,6 +17,6 @@ void CharacterSelection::update(float /*time*/)
 
 	if (m_pge->GetMouse(0).bReleased)
 	{
-		SceneManager::getInstance().changeScene(SceneManager::Scene::game, m_pge);
+		SceneManager::getInstance().changeScene(SceneManager::Scene::game);
 	}
 }

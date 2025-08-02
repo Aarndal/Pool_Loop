@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <map>
+#include <optional>
 
 class IScene;
 namespace olc {
@@ -17,10 +18,10 @@ public:
 		characterSelection,
 		game
 	};
-	void changeScene(Scene newSchene, olc::PixelGameEngine* pge);
-	IScene* getCurrentScene();
+	void changeScene(Scene newSchene);
+	IScene* getCurrentScene(olc::PixelGameEngine* pge);
 private:
 	std::unique_ptr<IScene> m_currentScene;
-
+	std::optional<Scene> m_nextScene;
 };
 

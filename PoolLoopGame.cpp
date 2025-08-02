@@ -4,13 +4,13 @@
 
 bool PoolLoopGameEngine::OnUserCreate()
 {
-	SceneManager::getInstance().changeScene(SceneManager::Scene::mainMenu, this);
+	SceneManager::getInstance().changeScene(SceneManager::Scene::mainMenu);
 	return true;
 }
 
 bool PoolLoopGameEngine::OnUserUpdate(float fElapsedTime)
 {
-	if(auto* pCurrentScene = SceneManager::getInstance().getCurrentScene())
+	if(auto* pCurrentScene = SceneManager::getInstance().getCurrentScene(this))
 	{
 		pCurrentScene->update(fElapsedTime);
 	}
