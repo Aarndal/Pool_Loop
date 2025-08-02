@@ -12,7 +12,7 @@ void GameScene::init()
 
 	if (!m_playerCharacter)
 	{
-		m_playerCharacter = { playerData };
+		m_playerCharacter = { std::move(playerData) };
 	}
 
 	m_playerCharacter->init(m_startPosition);
@@ -44,13 +44,12 @@ void GameScene::update(float elapsedTime)
 	}
 	else
 	{
-		if (m_engine->GetKey(olc::Key::SPACE).bPressed)
-		{
-			m_playerCharacter->setIsFalling(true);
-		}
+		m_playerCharacter->jump(*m_engine);
 	}
 
 	// Draw PlayerCharacter
+
+
 	olc::vf2d size{ 50.f,100.f };
 	m_engine->DrawRectDecal(m_playerCharacter->getPosition(), size, olc::RED);
 }

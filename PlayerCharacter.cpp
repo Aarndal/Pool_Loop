@@ -1,12 +1,25 @@
 #include "PlayerCharacter.h"
 
 // Initialization methods
-inline void PlayerCharacter::init(const olc::vf2d& startPosition)
+void PlayerCharacter::init(const olc::vf2d& startPosition)
 {
 	m_currentPosition = startPosition;
 	m_currentVelocity = { 0.0f, 0.0f };
 	m_currentRotationAngle = 0.0f;
 	m_isFalling = false;
+
+	m_isInitialized = true;
+}
+
+bool PlayerCharacter::jump(const olc::PixelGameEngine& engine)
+{
+	if (!m_isFalling && engine.GetKey(olc::Key::SPACE).bPressed)
+	{
+		m_isFalling = true;
+		return true;
+	}
+
+	return false;
 }
 
 olc::vf2d PlayerCharacter::moveHorizontal(float elapsedTime, PlayerCharacter::Movement moveDirection)
@@ -44,12 +57,35 @@ olc::vf2d PlayerCharacter::moveVertical(float elapsedTime, float gravity)
 	return m_currentPosition;
 }
 
-float PlayerCharacter::rotate(float elapsedTime, const olc::PixelGameEngine& engine)
+float PlayerCharacter::rotate(float elapsedTime, olc::PixelGameEngine& engine)
 {
 	if (engine.GetKey(olc::Key::SPACE).bPressed)
 	{
-
+		m_isRotating = !m_isRotating;
 	}
 
-	return 0.0f;
+	if (m_isRotating)
+	{
+		m_currentRotationAngle += 5.0f * elapsedTime; //TODO: Add angular speed to PlayerData
+
+		if (m_currentRotationAngle >= 360.0f)
+			m_currentRotationAngle -= 360.0f;
+	}
+
+	return m_currentRotationAngle;
+}
+
+bool PlayerCharacter::draw(olc::PixelGameEngine& engine)
+{
+	if (m_isFalling)
+	{
+		if (m_isRotating)
+			engine.DrawRotatedDecal(m_currentPosition, m_data.getImages()[1].Decal(), m_currentRotationAngle);
+
+		engine.DrawRotatedDecal(m_currentPosition, m_data.getImages()[0].Decal(), m_currentRotationAngle);
+	}
+
+	engine.DrawSprite(m_currentPosition, m_data.getImages()[0].Sprite());
+
+	return true;
 }
