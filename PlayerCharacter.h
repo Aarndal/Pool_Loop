@@ -26,6 +26,8 @@ public:
 		RIGHT,
 	};
 
+	void setPosition(const olc::vf2d& position) { m_position = position; }
+
 	bool getIsFalling() const { return m_isFalling; }
 	void setIsFalling(bool isFalling) { m_isFalling = isFalling; }
 
