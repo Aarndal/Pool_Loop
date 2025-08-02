@@ -8,7 +8,7 @@ GameScene::GameScene(olc::PixelGameEngine* engine) : m_engine{ engine }
 
 void GameScene::init()
 {
-	PlayerData playerData{ 1, 10.0f, 10.0f, 40.0f };
+	PlayerData playerData{ 1, 10.0f, 10.0f, 5.0f, 40.0f };
 
 	playerData.init(
 		{

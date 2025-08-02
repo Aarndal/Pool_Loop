@@ -66,10 +66,10 @@ float PlayerCharacter::rotate(float elapsedTime, olc::PixelGameEngine& engine)
 
 	if (m_isRotating)
 	{
-		m_currentRotationAngle += 5.0f * elapsedTime; //TODO: Add angular speed to PlayerData
+		m_currentRotationAngle -= m_data.getAngularSpeed() * elapsedTime;
 
-		if (m_currentRotationAngle >= 360.0f)
-			m_currentRotationAngle -= 360.0f;
+		if (m_currentRotationAngle <= -360.0f)
+			m_currentRotationAngle += 360.0f;
 	}
 
 	return m_currentRotationAngle;
@@ -80,9 +80,9 @@ bool PlayerCharacter::draw(olc::PixelGameEngine& engine)
 	if (m_isFalling)
 	{
 		if (m_isRotating)
-			engine.DrawPartialRotatedDecal(m_currentPosition, m_data.getImages()[1].Decal(), -m_currentRotationAngle, { (float)m_data.getImages()[1].Sprite()->width, (float)m_data.getImages()[1].Sprite()->height }, {}, m_data.getImages()[1].Sprite()->Size());
+			engine.DrawPartialRotatedDecal(m_currentPosition, m_data.getImages()[1].Decal(), m_currentRotationAngle, { (float)m_data.getImages()[1].Sprite()->width, (float)m_data.getImages()[1].Sprite()->height }, {}, m_data.getImages()[1].Sprite()->Size());
 		else
-			engine.DrawPartialRotatedDecal(m_currentPosition, m_data.getImages()[0].Decal(), -m_currentRotationAngle, { (float)m_data.getImages()[0].Sprite()->width, (float)m_data.getImages()[0].Sprite()->height }, {}, m_data.getImages()[0].Sprite()->Size());
+			engine.DrawPartialRotatedDecal(m_currentPosition, m_data.getImages()[0].Decal(), m_currentRotationAngle, { (float)m_data.getImages()[0].Sprite()->width, (float)m_data.getImages()[0].Sprite()->height }, {}, m_data.getImages()[0].Sprite()->Size());
 
 		return true;
 	}
