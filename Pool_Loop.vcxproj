@@ -104,6 +104,10 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>.\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+      <DisableAnalyzeExternal>true</DisableAnalyzeExternal>
+      <AnalyzeExternalRuleset>olcPixelGameEngine.h</AnalyzeExternalRuleset>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -125,12 +129,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="olcPixelGameEngine.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="PoolLoopGame.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="IScene.h" />
     <ClInclude Include="PoolLoopGame.h" />
