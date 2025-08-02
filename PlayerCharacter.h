@@ -26,10 +26,14 @@ public:
 		RIGHT,
 	};
 
-public:
+	bool getIsFalling() const { return m_isFalling; }
+	void setIsFalling(bool isFalling) { m_isFalling = isFalling; }
+
 	olc::vf2d move(float elapsedTime, Movement moveDirection);
 
 private:
+	bool m_isFalling{ false };
+
 	PlayerData* m_data{};
 
 	olc::vf2d m_position{ 0.0f, 0.0f };

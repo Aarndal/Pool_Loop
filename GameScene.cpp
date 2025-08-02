@@ -1,4 +1,6 @@
 #include "GameScene.h"
+#include "PlayerData.h"
+#include "PlayerCharacter.h"
 
 GameScene::GameScene(olc::PixelGameEngine* engine) : m_engine{ engine }
 {
@@ -6,35 +8,41 @@ GameScene::GameScene(olc::PixelGameEngine* engine) : m_engine{ engine }
 
 void GameScene::init()
 {
-	m_falling = false;
-	m_gravitySpeed = 10.0f;
-	m_speed = 2.0f;
+	m_gravity = 10.0f;
+
+	PlayerData playerData{ 1, 10.0f, 5.0f, 20.0f };
+
+	if (!m_playerCharacter)
+	{
+		m_playerCharacter = { &playerData };
+	}
+
+	m_playerCharacter->setIsFalling(false);
 }
 
 void GameScene::update(float elapsedTime)
 {
 	m_engine->Clear(olc::VERY_DARK_BLUE);
 
-	if (m_falling)
+	if (m_playerCharacter->getIsFalling())
 	{
 		if (m_engine->GetKey(olc::Key::A).bHeld)
 		{
-			m_pos += olc::vf2d{ -1,0 } *m_speed * elapsedTime;
+			m_playerCharacter->move(elapsedTime, PlayerCharacter::Movement::LEFT);
 		}
 
 		if (m_engine->GetKey(olc::Key::D).bHeld)
 		{
-			m_pos += olc::vf2d{ 1,0 } *m_speed * elapsedTime;
+			m_playerCharacter->move(elapsedTime, PlayerCharacter::Movement::RIGHT);
 		}
 
-		m_pos += olc::vf2d{ 0,1 } *m_gravitySpeed * elapsedTime;
+		m_pos += olc::vf2d{ 0,1 } *m_gravity * elapsedTime;
 	}
-
-	if (!m_falling)
+	else
 	{
 		if (m_engine->GetKey(olc::Key::SPACE).bPressed)
 		{
-			m_falling = true;
+			m_playerCharacter->setIsFalling(true);
 		}
 	}
 
