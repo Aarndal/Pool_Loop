@@ -16,7 +16,8 @@ public:
 	{
 		mainMenu,
 		characterSelection,
-		game
+		game,
+		quit
 	};
 	void changeScene(Scene newSchene);
 	IScene* getCurrentScene(olc::PixelGameEngine* pge);

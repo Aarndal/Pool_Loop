@@ -14,6 +14,7 @@ namespace
         case mainMenu:              return std::make_unique<MainMenu>(pge);
         case characterSelection:    return std::make_unique<CharacterSelection>(pge);
         case game:                  return std::make_unique<GameScene>(pge);
+        case quit:                  return nullptr;
         }
         return std::make_unique<MainMenu>(pge);
     }
@@ -35,7 +36,10 @@ IScene* SceneManager::getCurrentScene(olc::PixelGameEngine* pge)
     if (m_nextScene)
     {
         m_currentScene = createSchene(*m_nextScene, pge);
-        m_currentScene->init();
+        if (m_currentScene)
+        {
+            m_currentScene->init();
+        }
         m_nextScene = std::nullopt;
     }
     return m_currentScene.get();

@@ -10,9 +10,15 @@ bool PoolLoopGameEngine::OnUserCreate()
 
 bool PoolLoopGameEngine::OnUserUpdate(float fElapsedTime)
 {
+	if (GetKey(olc::Key::ESCAPE).bPressed)
+	{
+		return false;
+	}
+
 	if(auto* pCurrentScene = SceneManager::getInstance().getCurrentScene(this))
 	{
 		pCurrentScene->update(fElapsedTime);
+		return true;
 	}
-	return true;
+	return false;
 }

@@ -6,7 +6,8 @@ MainMenu::MainMenu(olc::PixelGameEngine* pge)
 	, m_vecButtons
 	{ 
 		{ BoundingBox2D{{870,300},{1205,370}},[=]() {SceneManager::getInstance().changeScene(SceneManager::Scene::game); }},
-		{ BoundingBox2D{{870,390},{1205,460}},[=]() {SceneManager::getInstance().changeScene(SceneManager::Scene::characterSelection); }}
+		{ BoundingBox2D{{870,390},{1205,460}},[=]() {SceneManager::getInstance().changeScene(SceneManager::Scene::characterSelection); }},
+		{ BoundingBox2D{{870,500},{1205,580}},[=]() {SceneManager::getInstance().changeScene(SceneManager::Scene::quit); }}
 	}
 {
 }
