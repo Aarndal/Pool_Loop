@@ -80,14 +80,12 @@ bool PlayerCharacter::draw(olc::PixelGameEngine& engine)
 	if (m_isFalling)
 	{
 		if (m_isRotating)
-			engine.DrawRotatedDecal(m_currentPosition, m_data.getImages()[1].Decal(), m_currentRotationAngle);
-
-		engine.DrawRotatedDecal(m_currentPosition, m_data.getImages()[0].Decal(), m_currentRotationAngle);
+			engine.DrawPartialRotatedDecal(m_currentPosition, m_data.getImages()[1].Decal(), -m_currentRotationAngle, { (float)m_data.getImages()[1].Sprite()->width, (float)m_data.getImages()[1].Sprite()->height }, {}, m_data.getImages()[1].Sprite()->Size());
+		else
+			engine.DrawPartialRotatedDecal(m_currentPosition, m_data.getImages()[0].Decal(), -m_currentRotationAngle, { (float)m_data.getImages()[0].Sprite()->width, (float)m_data.getImages()[0].Sprite()->height }, {}, m_data.getImages()[0].Sprite()->Size());
 
 		return true;
 	}
-
-	//engine.DrawRotatedDecal(m_currentPosition, m_data.getImages()[0].Decal(), 0.0f);
 
 	engine.DrawDecal(m_currentPosition, m_data.getImages()[0].Decal());
 
