@@ -1,10 +1,11 @@
 #include "olcPixelGameEngine.h"
+#include "GameScene.h"
 
 // Override base class with your custom functionality
-class Example : public olc::PixelGameEngine
+class PoolLoopGame : public olc::PixelGameEngine
 {
 public:
-	Example()
+	PoolLoopGame()
 	{
 		// Name your application
 		sAppName = "Example";
@@ -13,24 +14,26 @@ public:
 public:
 	bool OnUserCreate() override
 	{
+		gameScene.init();
 		// Called once at the start, so create things here
 		return true;
 	}
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
-		// Called once per frame, draws random coloured pixels
-		for (int x = 0; x < ScreenWidth(); x++)
-			for (int y = 0; y < ScreenHeight(); y++)
-				Draw(x, y, olc::Pixel(rand() % 256, rand() % 256, rand() % 256));
+		gameScene.update(fElapsedTime);
 		return true;
 	}
+
+private:
+	GameScene gameScene{ this };
+
 };
 
 int main()
 {
-	Example demo;
-	if (demo.Construct(256, 240, 4, 4))
-		demo.Start();
+	PoolLoopGame game;
+	if (game.Construct(1920, 1080, 1, 1))
+		game.Start();
 	return 0;
 }
