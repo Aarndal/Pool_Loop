@@ -4,7 +4,7 @@
 
 bool PoolLoopGameEngine::OnUserCreate()
 {
-	SceneManager::getInstance().changeScene(SceneManager::Scene::game, this);
+	SceneManager::getInstance().changeScene(SceneManager::Scene::mainMenu, this);
 	return true;
 }
 

@@ -8,5 +8,9 @@ public:
 	CharacterSelection(olc::PixelGameEngine* pge);
 	void init() override;
 	void update(float time) override;
+
+private:
+	olc::Renderable m_backgroundImage;
+	olc::PixelGameEngine* m_pge;
 };
 
