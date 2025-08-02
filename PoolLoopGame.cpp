@@ -10,6 +10,9 @@ bool PoolLoopGameEngine::OnUserCreate()
 
 bool PoolLoopGameEngine::OnUserUpdate(float fElapsedTime)
 {
-	SceneManager::getInstance().getCurrentScene()->update(fElapsedTime);
+	if(auto* pCurrentScene = SceneManager::getInstance().getCurrentScene())
+	{
+		pCurrentScene->update(fElapsedTime);
+	}
 	return true;
 }

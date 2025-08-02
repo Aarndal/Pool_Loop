@@ -15,6 +15,7 @@ namespace
         case characterSelection:    return std::make_unique<CharacterSelection>(pge);
         case game:                  return std::make_unique<GameScene>(pge);
         }
+        return std::make_unique<MainMenu>(pge);
     }
 }
 

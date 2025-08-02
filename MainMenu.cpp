@@ -1,6 +1,6 @@
 #include "MainMenu.h"
 
-MainMenu::MainMenu(olc::PixelGameEngine* pge)
+MainMenu::MainMenu(olc::PixelGameEngine* /*pge*/)
 {
 }
 
@@ -8,7 +8,7 @@ void MainMenu::init()
 {
 }
 
-void MainMenu::update(float time)
+void MainMenu::update(float /*time*/)
 {
 
 }
