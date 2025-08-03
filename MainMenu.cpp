@@ -22,9 +22,10 @@ void MainMenu::init(const std::shared_ptr<ISceneData>&)
 	{
 		button.loadImage();
 	}
+	m_logo = Logo{ {500.f,50.f} };
 }
 
-void MainMenu::update(float /*time*/)
+void MainMenu::update(float time)
 {
 	m_pge->DrawDecal({}, m_backgroundImage.Decal());
 
@@ -32,4 +33,11 @@ void MainMenu::update(float /*time*/)
 	{
 		button.update(m_pge);
 	}
+
+	if (m_logo)
+	{
+		m_logo->update(time);
+		m_logo->draw(m_pge);
+	}
+	
 }

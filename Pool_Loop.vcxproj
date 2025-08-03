@@ -135,6 +135,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CharacterSelection.cpp" />
     <ClCompile Include="GameSceneBackground.cpp" />
+    <ClCompile Include="Logo.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="olcPixelGameEngine.cpp" />
     <ClCompile Include="GameScene.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="GameSceneBackground.h" />
     <ClInclude Include="IScene.h" />
+    <ClInclude Include="Logo.h" />
     <ClInclude Include="PlayerCharacter.h" />
     <ClInclude Include="PlayerData.h" />
     <ClInclude Include="MainMenu.h" />

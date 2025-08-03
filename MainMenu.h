@@ -2,6 +2,7 @@
 #include <olcPixelGameEngine.h>
 #include "IScene.h"
 #include "Button.h"
+#include "Logo.h"
 
 class MainMenu : public IScene
 {
@@ -13,5 +14,6 @@ private:
 	olc::Renderable m_backgroundImage;
 	olc::PixelGameEngine* m_pge;
 	std::vector<Button> m_vecButtons;
+	std::optional<Logo> m_logo;
 };
 
