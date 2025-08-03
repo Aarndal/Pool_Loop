@@ -19,12 +19,12 @@ float PlayerCharacter::getCurrentAirResistance(Movement movement)
 
 	if (!m_isRotating)
 	{
-		float lerpFactor{ std::fabs(std::sinf(getCurrentRotationAngle())) };
+		float lerpFactor{ std::fabs(std::cosf(getCurrentRotationAngle())) };
 
 		if (movement == Movement::NONE)
 			lerpFactor = 1 - lerpFactor;
 
-		currentAirResistance = std::lerp(m_data->getAirResistance(), 2.0f, lerpFactor);
+		currentAirResistance = std::lerp(m_data->getAirResistance(), 1.0f, lerpFactor);
 	}
 
 	return currentAirResistance;
@@ -56,17 +56,15 @@ olc::vf2d PlayerCharacter::moveHorizontal(float elapsedTime, PlayerCharacter::Mo
 	switch (moveDirection)
 	{
 	case Movement::LEFT:
-		m_currentVelocity.x = -m_data->getLinearSpeed();
+		m_currentVelocity.x = -m_data->getLinearSpeed() / getCurrentAirResistance(moveDirection);
 		break;
 	case Movement::RIGHT:
-		m_currentVelocity.x = m_data->getLinearSpeed();
+		m_currentVelocity.x = m_data->getLinearSpeed() / getCurrentAirResistance(moveDirection);
 		break;
 	default:
 		m_currentVelocity.x = 0.0f;
 		break;
 	}
-
-	m_currentVelocity.x /= getCurrentAirResistance(moveDirection);
 
 	m_currentPosition.x += m_currentVelocity.x * elapsedTime;
 
@@ -96,14 +94,14 @@ olc::vf2d PlayerCharacter::moveVertical(float elapsedTime, float gravity)
 	}
 	case PlayerCharacter::State::FALL:
 	{
-		m_currentVelocity.y += gravity * elapsedTime;
-
-		m_currentVelocity.y /= getCurrentAirResistance(Movement::NONE);
+		m_currentVelocity.y += 0.5f * gravity * elapsedTime;
 
 		if (m_currentVelocity.y > m_data->getMaxFallSpeed())
 			m_currentVelocity.y = m_data->getMaxFallSpeed();
 
-		m_currentPosition.y += 0.5f * m_currentVelocity.y * elapsedTime;
+		m_currentVelocity.y /= getCurrentAirResistance(Movement::NONE);
+
+		m_currentPosition.y += m_currentVelocity.y * elapsedTime;
 		break;
 	}
 	default:
@@ -140,7 +138,7 @@ bool PlayerCharacter::draw(olc::PixelGameEngine& engine, const Camera& camera)
 	}
 	if (m_data->getImages()[currentImageIndex].Decal())
 	{
-		engine.DrawPartialRotatedDecal(camera.transform(m_currentPosition), m_data->getImages()[currentImageIndex].Decal(), m_currentRotationAngle, { 0.5f * (float)m_data->getImages()[currentImageIndex].Sprite()->width,  0.5f * (float)m_data->getImages()[currentImageIndex].Sprite()->height }, {}, m_data->getImages()[currentImageIndex].Sprite()->Size());
+		engine.DrawPartialRotatedDecal(camera.transform(m_currentPosition), m_data->getImages()[currentImageIndex].Decal(), getCurrentRotationAngle(), { 0.5f * (float)m_data->getImages()[currentImageIndex].Sprite()->width,  0.5f * (float)m_data->getImages()[currentImageIndex].Sprite()->height }, {}, m_data->getImages()[currentImageIndex].Sprite()->Size());
 	}
 	return true;
 }
