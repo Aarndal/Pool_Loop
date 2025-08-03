@@ -17,7 +17,7 @@ GameScene::GameScene(olc::PixelGameEngine* engine)
 
 void GameScene::init()
 {
-	PlayerData playerData{ 1, 10.0f, 10.0f, 5.0f, 100.0f };
+	PlayerData playerData{ 1, 0.5f, 10.0f, 5.0f, 100.0f };
 
 	playerData.init(
 		{
@@ -49,7 +49,7 @@ void GameScene::update(float elapsedTime)
 		break;
 	case PlayerCharacter::State::JUMP:
 	{
-		m_playerCharacter->jump(elapsedTime, *m_engine);
+		m_playerCharacter->moveVertical(elapsedTime, m_gravity);
 		break;
 	}
 	case PlayerCharacter::State::FALL:

@@ -3,7 +3,7 @@
 #include "GameSceneBackground.h"
 
 // Initialization methods
-void PlayerCharacter::init(const olc::vf2d& startPosition) //TODO: Add endPosition
+void PlayerCharacter::init(const olc::vf2d& startPosition) //TODO: Add jumpPosition
 {
 	m_currentPosition = startPosition;
 	m_currentVelocity = { 0.0f, 0.0f };
@@ -17,15 +17,8 @@ bool PlayerCharacter::jump(float elapsedTime, const olc::PixelGameEngine& engine
 {
 	if (m_currentState == State::START || m_currentState == State::IDLE)
 	{
+		m_jumpStartPosition = m_currentPosition;
 		m_currentState = State::JUMP;
-		return true;
-	}
-
-	if (m_currentState == State::JUMP)
-	{
-		m_isFalling = true;
-		m_currentVelocity.y = -m_data.getMass() * 10.0f;
-		m_currentState = State::FALL;
 		return true;
 	}
 
@@ -47,7 +40,7 @@ olc::vf2d PlayerCharacter::moveHorizontal(float elapsedTime, PlayerCharacter::Mo
 		break;
 	}
 
-	m_currentPosition.x += m_data.getMass() * m_currentVelocity.x * elapsedTime;
+	m_currentPosition.x += m_currentVelocity.x / m_data.getAirResistance() * elapsedTime;
 
 	return m_currentPosition;
 }
@@ -61,22 +54,25 @@ olc::vf2d PlayerCharacter::moveVertical(float elapsedTime, float gravity)
 		if (m_currentVelocity.y > m_data.getMaxFallSpeed())
 			m_currentVelocity.y = m_data.getMaxFallSpeed();
 
-		m_currentPosition.y += 0.5f * m_data.getMass() * m_currentVelocity.y * elapsedTime;
+		m_currentPosition.y += 0.5f * m_currentVelocity.y / m_data.getAirResistance() * elapsedTime;
 	}
 	else if (m_currentState == State::JUMP)
 	{
-		olc::vf2d jumpDirection = {1.0f, 1.0f};
+		olc::vf2d jumpPosition{ m_jumpStartPosition.x + 10.0f , m_jumpStartPosition.y - 10.0f };
 
-		m_currentVelocity = jumpDirection * -10.0f;
+		olc::vf2d jumpDirection = jumpPosition - m_jumpStartPosition;
+
+		m_currentVelocity = jumpDirection * 5.0f;
 
 		m_currentPosition += m_currentVelocity * elapsedTime;
 
-		//TODO: Check if Jump is finished
-		m_currentState = State::FALL;
+		float jumpHeight = m_currentPosition.y - jumpPosition.y;
+
+		if (jumpHeight <= 0.0f)
+			m_currentState = State::FALL;
 	}
 	else
 	{
-		m_isFalling = false;
 		m_currentVelocity.y = 0.0f;
 	}
 
@@ -92,10 +88,10 @@ float PlayerCharacter::rotate(float elapsedTime, olc::PixelGameEngine& engine)
 
 	if (m_isRotating)
 	{
-		m_currentRotationAngle -= m_data.getAngularSpeed() * elapsedTime;
+		m_currentRotationAngle += m_data.getAngularSpeed() * elapsedTime;
 
-		if (m_currentRotationAngle <= -360.0f)
-			m_currentRotationAngle += 360.0f;
+		if (m_currentRotationAngle <= 360.0f)
+			m_currentRotationAngle -= 360.0f;
 	}
 
 	return m_currentRotationAngle;
@@ -103,12 +99,14 @@ float PlayerCharacter::rotate(float elapsedTime, olc::PixelGameEngine& engine)
 
 bool PlayerCharacter::draw(olc::PixelGameEngine& engine, const Camera& camera)
 {
-	if (m_isFalling)
+	if (m_currentState == State::FALL)
 	{
+		int currentImageIndex{ 0 };
+
 		if (m_isRotating)
-			engine.DrawPartialRotatedDecal(camera.transform(m_currentPosition), m_data.getImages()[1].Decal(), m_currentRotationAngle, { 0.5f * (float)m_data.getImages()[1].Sprite()->width,  0.5f * (float)m_data.getImages()[1].Sprite()->height }, {}, m_data.getImages()[1].Sprite()->Size());
-		else
-			engine.DrawPartialRotatedDecal(camera.transform(m_currentPosition), m_data.getImages()[0].Decal(), m_currentRotationAngle, { 0.5f * (float)m_data.getImages()[0].Sprite()->width,  0.5f * (float)m_data.getImages()[0].Sprite()->height }, {}, m_data.getImages()[0].Sprite()->Size());
+			currentImageIndex = 1; // Use the rotated image
+
+		engine.DrawPartialRotatedDecal(camera.transform(m_currentPosition), m_data.getImages()[currentImageIndex].Decal(), m_currentRotationAngle, { 0.5f * (float)m_data.getImages()[currentImageIndex].Sprite()->width,  0.5f * (float)m_data.getImages()[currentImageIndex].Sprite()->height }, {}, m_data.getImages()[currentImageIndex].Sprite()->Size());
 
 		return true;
 	}
