@@ -19,7 +19,7 @@ float PlayerCharacter::getCurrentAirResistance(Movement movement)
 
 	if (!m_isRotating)
 	{
-		float lerpFactor{ abs(sin(m_currentRotationAngle)) };
+		float lerpFactor{ abs(cos(m_currentRotationAngle)) };
 
 		if (movement == Movement::NONE)
 			lerpFactor = 1 - lerpFactor;
@@ -66,7 +66,7 @@ olc::vf2d PlayerCharacter::moveHorizontal(float elapsedTime, PlayerCharacter::Mo
 		break;
 	}
 
-	m_currentVelocity /= getCurrentAirResistance(moveDirection);
+	m_currentVelocity.x /= getCurrentAirResistance(moveDirection);
 
 	m_currentPosition.x += m_currentVelocity.x * elapsedTime;
 
@@ -98,7 +98,7 @@ olc::vf2d PlayerCharacter::moveVertical(float elapsedTime, float gravity)
 	{
 		m_currentVelocity.y += gravity * elapsedTime;
 
-		m_currentVelocity /= getCurrentAirResistance(Movement::NONE);
+		m_currentVelocity.y /= getCurrentAirResistance(Movement::NONE);
 
 		if (m_currentVelocity.y > m_data->getMaxFallSpeed())
 			m_currentVelocity.y = m_data->getMaxFallSpeed();
