@@ -10,6 +10,8 @@ namespace
 		"Cat_01",
 		"Cat_02",
 		"Cat_03",
+		"Cat_04",
+
 	};
 
 	const olc::vf2d buttonSize{144.f,131.f};
