@@ -79,7 +79,14 @@ olc::vf2d PlayerCharacter::moveVertical(float elapsedTime, float gravity)
 	}
 	case PlayerCharacter::State::FALL:
 	{
-		m_currentVelocity.y += gravity * elapsedTime / m_data->getAirResistance();
+		m_currentVelocity.y += gravity * elapsedTime;
+
+		float currentAirResistance{ 0.5f };
+
+		if (!m_isRotating)
+			currentAirResistance = std::lerp(m_data->getAirResistance(), 2.0f, abs(cos(m_currentRotationAngle)));
+
+		m_currentVelocity /= currentAirResistance;
 
 		if (m_currentVelocity.y > m_data->getMaxFallSpeed())
 			m_currentVelocity.y = m_data->getMaxFallSpeed();
