@@ -45,7 +45,7 @@ bool PlayerCharacter::jump()
 
 		m_currentState = State::JUMP;
 
-		increaseCurrentRotationAngle(acosf(m_jumpDirection.dot(olc::vf2d{ 0.0f, 1.0f })));
+		increaseCurrentRotationAngle(acosf(m_jumpDirection.dot(olc::vf2d{ 0.0f, -1.0f })));
 
 		return true;
 	}
