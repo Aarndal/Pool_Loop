@@ -14,7 +14,7 @@ void PlayerCharacter::init(const olc::vf2d& startPosition) //TODO: Add EndPositi
 
 float PlayerCharacter::getCurrentAirResistance(Movement movement)
 {
-	float currentAirResistance{ 0.5f };
+	float currentAirResistance{ 0.15f };
 
 	if (!m_isRotating)
 	{
@@ -79,9 +79,9 @@ olc::vf2d PlayerCharacter::moveVertical(float elapsedTime, float gravity)
 	{
 	case PlayerCharacter::State::JUMP:
 	{
-		/*increaseCurrentRotationAngle(acosf(m_jumpDirection.dot(olc::vf2d{ 0.0f, 1.0f })));*/
+		//increaseCurrentRotationAngle(acosf(m_jumpDirection.dot(olc::vf2d{ 0.0f, 1.0f })));
 
-		m_currentVelocity = m_jumpDirection * 300.0f;
+		m_currentVelocity = m_jumpDirection * 500.0f;
 		m_currentPosition += m_currentVelocity * elapsedTime;
 
 		float currentJumpHeight = m_jumpEndPosition.y - m_currentPosition.y;
@@ -128,7 +128,16 @@ float PlayerCharacter::rotate(float elapsedTime, olc::PixelGameEngine& engine)
 
 	if (m_isRotating)
 	{
-		increaseCurrentRotationAngleDegrees(m_data->getAngularSpeed() * elapsedTime);
+		increaseCurrentRotationAngleDegrees(m_currentAngularSpeed * elapsedTime);
+
+		if (increaseAngularBoost(0.5f * elapsedTime))
+			increaseAngularSpeed(m_angularBoost);
+	}
+
+	if (!m_isRotating)
+	{
+		m_currentAngularSpeed = m_data->getAngularSpeed();
+		m_angularBoost = 0.0f;
 	}
 
 	return m_currentRotationAngle;

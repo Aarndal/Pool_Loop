@@ -12,6 +12,7 @@ class PlayerCharacter
 public:
 	PlayerCharacter(std::shared_ptr<PlayerData> data) : m_data{ std::move(data) }
 	{
+		m_currentAngularSpeed = m_data->getAngularSpeed();
 	}
 
 	enum struct State
@@ -67,6 +68,8 @@ private:
 	bool m_isRotating{ false };
 
 	float m_currentRotationAngle{ 0.0f };
+	float m_currentAngularSpeed{ 0.0f };
+	float m_angularBoost{ 1.0f };
 
 	olc::vf2d m_currentVelocity{ 0.0f, 0.0f };
 	olc::vf2d m_currentPosition{ 0.0f, 0.0f };
@@ -98,9 +101,27 @@ private:
 	{
 		if (std::fabs(deltaAngleDegrees) > 360.0f) // Don't allow rotation angles greater than 360 degrees
 			return false;
-		
+
 		float deltaAngle = deltaAngleDegrees * static_cast<float>(std::numbers::pi) / 180.0f;
 
 		return increaseCurrentRotationAngle(deltaAngle);
+	}
+
+	bool increaseAngularSpeed(float angularBoost)
+	{
+		if (angularBoost <= 0.0f)
+			return false;
+
+		m_currentAngularSpeed += angularBoost;
+		return true;
+	}
+
+	bool increaseAngularBoost(float deltaAngularBoost)
+	{
+		if (deltaAngularBoost <= 0.0f)
+			return false;
+
+		m_angularBoost += deltaAngularBoost;
+		return true;
 	}
 };
