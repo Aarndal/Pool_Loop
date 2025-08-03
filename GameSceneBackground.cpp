@@ -1,6 +1,6 @@
 #include "GameSceneBackground.h"
 #include "Animation.h"
-
+#include "Score.h"
 
 GameSceneBackground::GameSceneBackground(size_t imageCount) : m_imageCount{ imageCount }{}
 
@@ -50,4 +50,9 @@ void GameSceneBackground::drawFG(olc::PixelGameEngine& engine, const Camera& cam
 
 	engine.DrawDecal(camera.transform(
 		olc::vf2d{ 0.f, engine.GetScreenSize().y * -static_cast<float>(m_imageCount - 1) } + olc::vf2d{ 100.f,50.f }), m_instructions.Decal());
+
+	//Score
+	std::stringstream s;
+	s << "Score: " << Score::getInstance().getFinalScore();
+	engine.DrawStringDecal(olc::vf2d{ 1100.f,50.f }, s.str(), olc::DARK_GREY, {10.f,10.f});
 }

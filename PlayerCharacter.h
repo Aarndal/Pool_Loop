@@ -4,7 +4,7 @@
 #include <olcPixelGameEngine.h>
 #include "PlayerData.h"
 #include "Animation.h"
-
+#include "Score.h"
 class Camera;
 
 class PlayerCharacter
@@ -36,6 +36,7 @@ public:
 
 	// Getters and Setters
 	bool getIsFalling() const { return m_isFalling; }
+	bool getIsRotating() const { return m_isRotating; }
 	olc::vf2d getPosition() const { return m_currentPosition; }
 	State getCurrentState() const { return m_currentState; }
 
@@ -81,11 +82,15 @@ private:
 		m_currentRotationAngle += deltaAngle;
 
 		if (m_currentRotationAngle >= static_cast<float>(2.0 * std::numbers::pi))
+		{
 			m_currentRotationAngle -= static_cast<float>(2.0 * std::numbers::pi);
-
+			Score::getInstance().addRotation();
+		}
 		if (m_currentRotationAngle < 0.0f)
+		{
 			m_currentRotationAngle += static_cast<float>(2.0 * std::numbers::pi);
-
+			Score::getInstance().addRotation();
+		}
 		return true;
 	}
 
