@@ -2,6 +2,7 @@
 #include "GameScene.h"
 #include "MainMenu.h"
 #include "CharacterSelection.h"
+#include "GameOverScreen.h"
 
 
 namespace
@@ -14,6 +15,7 @@ namespace
         case mainMenu:              return std::make_unique<MainMenu>(pge);
         case characterSelection:    return std::make_unique<CharacterSelection>(pge);
         case game:                  return std::make_unique<GameScene>(pge);
+        case gameOver:              return std::make_unique<GameOverScreen>(pge);
         case quit:                  return nullptr;
         }
         return std::make_unique<MainMenu>(pge);

@@ -72,6 +72,7 @@ void GameScene::update(float elapsedTime)
 	}
 	case PlayerCharacter::State::END:
 	{
+		SceneManager::getInstance().changeScene(SceneManager::Scene::gameOver);
 		break;
 	}
 	default:
