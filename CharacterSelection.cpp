@@ -55,50 +55,8 @@ void CharacterSelection::update(float /*time*/)
 {
 	m_pge->DrawDecal({}, m_backgroundImage.Decal());
 
-
 	for (auto& button : m_vecButtons)
 	{
-		if (button.hit(m_pge->GetMousePos()))
-		{
-			if (m_pge->GetMouse(0).bReleased && button.m_bPressed)
-			{
-				if (button.hit(m_pge->GetMousePos()))
-				{
-					button.invoke();
-				}
-			}
-			const auto mouseState = m_pge->GetMouse(0);
-			if (mouseState.bHeld || mouseState.bPressed)
-			{
-				button.draw(m_pge, Button::DrawingState::pressed);
-				button.m_bPressed = true;
-			}
-			else
-			{
-				button.draw(m_pge, Button::DrawingState::highlight);
-				button.m_bPressed = false;
-			}
-		}
-		else
-		{
-			button.draw(m_pge);
-		}
-
-
+		button.update(m_pge);
 	}
-
-//	if (m_pge->GetMouse(0).bReleased)
-//	{
-//
-//		auto pData= std::make_shared<PlayerData>(1, 0.5f, 10.0f, 5.0f, 100.0f );
-//
-//		pData->init(
-//	{
-//				"resources\\PC_Cat_00_Stretched.png",
-//				"resources\\PC_Cat_00_Round.png"
-//		}
-//);
-//
-//		SceneManager::getInstance().changeScene(SceneManager::Scene::game, pData);
-//	}
 }

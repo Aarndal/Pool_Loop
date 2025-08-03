@@ -16,6 +16,36 @@ void Button::invoke() const
 	std::invoke(m_action);
 }
 
+void Button::update(olc::PixelGameEngine* pge)
+{
+	if (hit(pge->GetMousePos()))
+	{
+		if (pge->GetMouse(0).bReleased && m_bPressed)
+		{
+			if (hit(pge->GetMousePos()))
+			{
+				invoke();
+			}
+		}
+		const auto mouseState = pge->GetMouse(0);
+		if (mouseState.bHeld || mouseState.bPressed)
+		{
+			draw(pge, Button::DrawingState::pressed);
+			m_bPressed = true;
+		}
+		else
+		{
+			draw(pge, Button::DrawingState::highlight);
+			m_bPressed = false;
+		}
+	}
+	else
+	{
+		draw(pge);
+	}
+
+}
+
 namespace
 {
 	template<typename ... Ts>
