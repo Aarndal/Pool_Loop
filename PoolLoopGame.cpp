@@ -12,7 +12,7 @@ bool PoolLoopGameEngine::OnUserUpdate(float fElapsedTime)
 {
 	if (GetKey(olc::Key::ESCAPE).bPressed)
 	{
-		return false;
+		SceneManager::getInstance().changeScene(SceneManager::Scene::mainMenu);
 	}
 
 	if(auto* pCurrentScene = SceneManager::getInstance().getCurrentScene(this))
