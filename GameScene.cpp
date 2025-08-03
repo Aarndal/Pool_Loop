@@ -75,7 +75,12 @@ void GameScene::update(float elapsedTime)
 	}
 	case PlayerCharacter::State::END:
 	{
-		Score::getInstance().finaliseScore(m_playerCharacter->getCurrentRotationAngle(), m_playerCharacter->getIsRotating());
+		const float targetPosX = 1920 - 1600 + 0.5 * 1600;
+
+		Score::getInstance().finaliseScore(
+			m_playerCharacter->getCurrentRotationAngle(),
+			m_playerCharacter->getIsRotating(),
+			std::abs(m_playerCharacter->getPosition().x - targetPosX));
 		SceneManager::getInstance().changeScene(SceneManager::Scene::gameOver);
 		break;
 	}

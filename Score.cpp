@@ -19,10 +19,10 @@ void Score::addRotation()
 	m_currentPoints += scorePerRotation;
 }
 
-void Score::finaliseScore(float angleOfEntry, bool isRotating)
+void Score::finaliseScore(float angleOfEntry, bool isRotating, float distanceToTarget)
 {
 	const float factor{isRotating ? 1.f : std::lerp(2.0f, 10.0f,std::fabs(std::cosf(angleOfEntry))) };
-	m_currentPoints *= factor;
+	m_currentPoints *= factor * 100.f/ distanceToTarget;
 
 	m_highScore = m_highScore < m_currentPoints ? m_currentPoints : m_highScore;
 }

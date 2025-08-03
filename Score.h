@@ -5,7 +5,7 @@ public:
 	static Score& getInstance();
 
 	void addRotation();
-	void finaliseScore(float angleOfEntry, bool isRotating);
+	void finaliseScore(float angleOfEntry, bool isRotating, float distanceToTarget);
 
 	int getFinalScore();
 	int getHighScore();
