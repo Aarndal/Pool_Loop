@@ -14,7 +14,7 @@ void GameOverScreen::update(float time)
 {
 	m_pge->DrawDecal({}, m_backgroundImage.Decal());
 
-	m_pge->DrawStringDecal({ 500.f,500.f }, "Game over", olc::DARK_GREY);
+	m_pge->DrawStringDecal({ 700.f,250.f }, "Game over", olc::DARK_GREY,{10.f,10.f});
 
 	if (m_pge->GetKey(olc::Key::SPACE).bPressed)
 	{

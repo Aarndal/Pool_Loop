@@ -138,8 +138,9 @@ bool PlayerCharacter::draw(olc::PixelGameEngine& engine, const Camera& camera)
 		if (m_isRotating)
 			currentImageIndex = 1; // Use the rotated image
 	}
-
-	engine.DrawPartialRotatedDecal(camera.transform(m_currentPosition), m_data->getImages()[currentImageIndex].Decal(), m_currentRotationAngle, { 0.5f * (float)m_data->getImages()[currentImageIndex].Sprite()->width,  0.5f * (float)m_data->getImages()[currentImageIndex].Sprite()->height }, {}, m_data->getImages()[currentImageIndex].Sprite()->Size());
-
+	if (m_data->getImages()[currentImageIndex].Decal())
+	{
+		engine.DrawPartialRotatedDecal(camera.transform(m_currentPosition), m_data->getImages()[currentImageIndex].Decal(), m_currentRotationAngle, { 0.5f * (float)m_data->getImages()[currentImageIndex].Sprite()->width,  0.5f * (float)m_data->getImages()[currentImageIndex].Sprite()->height }, {}, m_data->getImages()[currentImageIndex].Sprite()->Size());
+	}
 	return true;
 }
