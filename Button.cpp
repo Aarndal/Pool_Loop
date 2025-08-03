@@ -90,8 +90,8 @@ void Button::draw(olc::PixelGameEngine* pge, DrawingState state) const
 	);
 		
 
-#ifdef _DEBUG
-	pge->DrawRectDecal(m_bb.min, m_bb.max - m_bb.min, olc::RED);
-#endif
+//#ifdef _DEBUG
+//	pge->DrawRectDecal(m_bb.min, m_bb.max - m_bb.min, olc::RED);
+//#endif
 
 }

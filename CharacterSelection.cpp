@@ -12,7 +12,7 @@ namespace
 		"Cat_03",
 	};
 
-	const olc::vf2d buttonSize{100.f,100.f};
+	const olc::vf2d buttonSize{144.f,131.f};
 
 	Button createButton(olc::vf2d pos, const std::string& name)
 	{
