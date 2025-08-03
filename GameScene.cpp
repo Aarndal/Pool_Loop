@@ -8,16 +8,16 @@ namespace
 }
 
 
-GameScene::GameScene(olc::PixelGameEngine* engine) 
+GameScene::GameScene(olc::PixelGameEngine* engine)
 	: m_engine{ engine }
 	, m_startPosition{ cameraStartPos(engine) + olc::vf2d{ 500.f,300.f } }
-	, camera{ cameraStartPos(engine)}
+	, camera{ cameraStartPos(engine) }
 {
 }
 
 void GameScene::init()
 {
-	PlayerData playerData{ 1, 10.0f, 10.0f, 5.0f, 40.0f };
+	PlayerData playerData{ 1, 10.0f, 10.0f, 5.0f, 100.0f };
 
 	playerData.init(
 		{
@@ -41,8 +41,18 @@ void GameScene::update(float elapsedTime)
 	m_engine->Clear(olc::WHITE);
 	const auto playerheight = m_playerCharacter->getPosition().y;
 
-	// Move PlayerCharacter
-	if (m_playerCharacter->getIsFalling())
+	switch (m_playerCharacter->getCurrentState())
+	{
+	case PlayerCharacter::State::START:
+		if (m_engine->GetKey(olc::Key::SPACE).bPressed)
+			m_playerCharacter->jump(elapsedTime, *m_engine);
+		break;
+	case PlayerCharacter::State::JUMP:
+	{
+		m_playerCharacter->jump(elapsedTime, *m_engine);
+		break;
+	}
+	case PlayerCharacter::State::FALL:
 	{
 		if (m_engine->GetKey(olc::Key::A).bHeld)
 		{
@@ -60,12 +70,18 @@ void GameScene::update(float elapsedTime)
 		m_playerCharacter->moveVertical(elapsedTime, m_gravity);
 
 		m_playerCharacter->rotate(elapsedTime, *m_engine);
+		break;
 	}
-	else
+	case PlayerCharacter::State::END:
 	{
-		m_playerCharacter->jump(*m_engine);
+		break;
 	}
+	default:
+		break;
+	}
+
 	camera.move({ 0,m_playerCharacter->getPosition().y - playerheight });
+
 	// Draw
 	m_background.draw(*m_engine, camera);
 	m_playerCharacter->draw(*m_engine, camera);

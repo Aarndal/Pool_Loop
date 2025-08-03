@@ -16,7 +16,7 @@ public:
 	enum struct State
 	{
 		START,
-		MOVE,
+		WALK,
 		IDLE,
 		JUMP,
 		FALL,
@@ -33,12 +33,13 @@ public:
 	// Getters and Setters
 	bool getIsFalling() const { return m_isFalling; }
 	olc::vf2d getPosition() const { return m_currentPosition; }
+	State getCurrentState() const { return m_currentState; }
 
 	// Initialization methods
 	void init(const olc::vf2d& startPosition);
 
 	// Movement methods
-	bool jump(const olc::PixelGameEngine& engine);
+	bool jump(float elapsedTime, const olc::PixelGameEngine& engine);
 	olc::vf2d moveHorizontal(float elapsedTime, Movement moveDirection);
 	olc::vf2d moveVertical(float elapsedTime, float gravity);
 	float rotate(float elapsedTime, olc::PixelGameEngine& engine);
