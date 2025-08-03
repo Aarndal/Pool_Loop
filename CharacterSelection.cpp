@@ -11,6 +11,8 @@ namespace
 		"Cat_02",
 		"Cat_03",
 		"Cat_04",
+		"Cat_05",
+		"Cat_06",
 
 	};
 

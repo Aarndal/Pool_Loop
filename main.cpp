@@ -4,7 +4,7 @@
 int main()
 {
 	PoolLoopGameEngine game;
-	if (game.Construct(1920, 1080, 1, 1,true))
+	if (game.Construct(1920, 1080, 1, 1/*,true*/))
 		game.Start();
 	return 0;
 }
