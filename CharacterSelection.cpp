@@ -1,12 +1,13 @@
 #include "CharacterSelection.h"
 #include "SceneManager.h"
+#include "PlayerData.h"
 CharacterSelection::CharacterSelection(olc::PixelGameEngine* pge) : m_pge{pge}
 {
 
 }
 
 
-void CharacterSelection::init()
+void CharacterSelection::init(const std::shared_ptr<ISceneData>&)
 {
 	m_backgroundImage.Load("resources\\BG_Menu.png");
 }
@@ -17,6 +18,16 @@ void CharacterSelection::update(float /*time*/)
 
 	if (m_pge->GetMouse(0).bReleased)
 	{
-		SceneManager::getInstance().changeScene(SceneManager::Scene::game);
+
+		auto pData= std::make_shared<PlayerData>(1, 0.5f, 10.0f, 5.0f, 100.0f );
+
+		pData->init(
+	{
+				"resources\\PC_Cat_00_Stretched.png",
+				"resources\\PC_Cat_00_Round.png"
+		}
+);
+
+		SceneManager::getInstance().changeScene(SceneManager::Scene::game, pData);
 	}
 }

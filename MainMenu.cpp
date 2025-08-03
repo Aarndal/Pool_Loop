@@ -15,7 +15,7 @@ MainMenu::MainMenu(olc::PixelGameEngine* pge)
 	m_vecButtons.emplace_back(BoundingBox2D{ {posX,500},buttonSize + olc::vf2d{870,500} },"resources\\Button_Quit.png", [=]() {SceneManager::getInstance().changeScene(SceneManager::Scene::quit); });
 }
 
-void MainMenu::init()
+void MainMenu::init(const std::shared_ptr<ISceneData>&)
 {
 	m_backgroundImage.Load("resources\\BG_Menu.png");
 	for (auto& button : m_vecButtons)

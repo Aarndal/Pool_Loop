@@ -3,7 +3,9 @@
 #include <map>
 #include <optional>
 
+
 class IScene;
+class ISceneData;
 namespace olc {
 	class PixelGameEngine;
 }
@@ -19,10 +21,17 @@ public:
 		game,
 		quit
 	};
-	void changeScene(Scene newSchene);
+	void changeScene(Scene newSchene, const std::shared_ptr<ISceneData>& data = nullptr);
 	IScene* getCurrentScene(olc::PixelGameEngine* pge);
+
+	struct NextScene
+	{
+		Scene id;
+		std::shared_ptr<ISceneData> data;
+	};
 private:
 	std::unique_ptr<IScene> m_currentScene;
-	std::optional<Scene> m_nextScene;
+	std::optional<NextScene> m_nextScene;
+
 };
 
