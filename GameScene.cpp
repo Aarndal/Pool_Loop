@@ -3,6 +3,7 @@
 #include "PlayerCharacter.h"
 #include "SceneManager.h"
 #include <cassert>
+#include "Score.h"
 
 namespace
 {
@@ -31,6 +32,7 @@ void GameScene::init(const std::shared_ptr<ISceneData>& data)
 	m_playerCharacter->init(m_startPosition);
 
 	m_background.load();
+	Score::getInstance().resetScore();
 }
 
 void GameScene::update(float elapsedTime)
@@ -73,6 +75,12 @@ void GameScene::update(float elapsedTime)
 	}
 	case PlayerCharacter::State::END:
 	{
+		const float targetPosX = 1920 - 1600 + 0.5 * 1600;
+
+		Score::getInstance().finaliseScore(
+			m_playerCharacter->getCurrentRotationAngle(),
+			m_playerCharacter->getIsRotating(),
+			std::abs(m_playerCharacter->getPosition().x - targetPosX));
 		SceneManager::getInstance().changeScene(SceneManager::Scene::gameOver);
 		break;
 	}
