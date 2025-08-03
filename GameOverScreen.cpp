@@ -5,16 +5,19 @@ GameOverScreen::GameOverScreen(olc::PixelGameEngine* pge) : m_pge{pge}
 {
 }
 
-void GameOverScreen::init(const std::shared_ptr<ISceneData>& data)
+void GameOverScreen::init(const std::shared_ptr<ISceneData>& )
 {
 	m_backgroundImage.Load("resources\\BG_Bottom.png");
+	m_backgroundImageFG.Load("resources\\FG_Bottom.png");
 }
 
-void GameOverScreen::update(float time)
+void GameOverScreen::update(float )
 {
 	m_pge->DrawDecal({}, m_backgroundImage.Decal());
 
 	m_pge->DrawStringDecal({ 700.f,250.f }, "Game over", olc::DARK_GREY,{10.f,10.f});
+
+	m_pge->DrawDecal({}, m_backgroundImageFG.Decal());
 
 	if (m_pge->GetKey(olc::Key::SPACE).bPressed)
 	{

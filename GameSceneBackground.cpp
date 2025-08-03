@@ -20,6 +20,8 @@ void GameSceneBackground::load()
 			"resources\\FG_Top.png",
 			"resources\\FG_Bottom.png",
 		});
+
+	m_instructions.Load("resources\\Instructions.png");
 }
 
 
@@ -45,4 +47,7 @@ void GameSceneBackground::drawFG(olc::PixelGameEngine& engine, const Camera& cam
 
 	//Draw Bottom
 	engine.DrawDecal(camera.transform({ 0.f,0.f }), m_vecImagesFG.back().Decal());
+
+	engine.DrawDecal(camera.transform(
+		olc::vf2d{ 0.f, engine.GetScreenSize().y * -static_cast<float>(m_imageCount - 1) } + olc::vf2d{ 100.f,50.f }), m_instructions.Decal());
 }

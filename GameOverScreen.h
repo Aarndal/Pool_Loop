@@ -10,6 +10,7 @@ public:
 	void update(float time) override;
 private:
 	olc::Renderable m_backgroundImage;
+	olc::Renderable m_backgroundImageFG;
 	olc::PixelGameEngine* m_pge;
 };
 
