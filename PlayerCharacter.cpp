@@ -2,12 +2,14 @@
 #include "Camera.h"
 #include "GameSceneBackground.h"
 
-void PlayerCharacter::init(const olc::vf2d& startPosition) //TODO: Add EndPosition
+void PlayerCharacter::init(const olc::vf2d& startPosition)
 {
-	m_currentPosition = startPosition;
+	m_jumpStartPosition = startPosition;
+	m_currentPosition = { startPosition.x - 200, startPosition.y };
 	m_currentVelocity = { 0.0f, 0.0f };
 	m_currentRotationAngle = 0.0f;
 	m_isFalling = false;
+	m_waitingTime = 3.0f;
 
 	m_isInitialized = true;
 }
@@ -31,7 +33,7 @@ float PlayerCharacter::getCurrentAirResistance(Movement movement)
 
 bool PlayerCharacter::jump()
 {
-	if (m_currentState == State::START || m_currentState == State::IDLE)
+	if (m_currentState == State::IDLE)
 	{
 		olc::vf2d jumpStartPosition = m_currentPosition;
 
@@ -55,20 +57,57 @@ bool PlayerCharacter::jump()
 
 olc::vf2d PlayerCharacter::moveHorizontal(float elapsedTime, PlayerCharacter::Movement moveDirection)
 {
-	switch (moveDirection)
+	switch (m_currentState)
 	{
-	case Movement::LEFT:
-		m_currentVelocity.x = -m_data->getLinearSpeed() / getCurrentAirResistance(moveDirection);
+	case PlayerCharacter::State::START:
+	{
+		m_currentVelocity.x = 0.0f;
+		m_waitingTime -= elapsedTime;
+
+		if (m_waitingTime <= 0.0f)
+		{
+			m_currentState = State::WALK;
+		}
+
 		break;
-	case Movement::RIGHT:
-		m_currentVelocity.x = m_data->getLinearSpeed() / getCurrentAirResistance(moveDirection);
+	}
+	case PlayerCharacter::State::WALK:
+	{
+		m_currentVelocity.x = m_data->getLinearSpeed();
+		//wiggle();
+		break;
+	}
+	case PlayerCharacter::State::FALL:
+	{
+		switch (moveDirection)
+		{
+		case Movement::LEFT:
+			m_currentVelocity.x = -m_data->getLinearSpeed() / getCurrentAirResistance(moveDirection);
+			break;
+		case Movement::RIGHT:
+			m_currentVelocity.x = m_data->getLinearSpeed() / getCurrentAirResistance(moveDirection);
+			break;
+		default:
+			m_currentVelocity.x = 0.0f;
+			break;
+		}
+		break;
+	}
+	case PlayerCharacter::State::END:
+		m_currentVelocity.x = 0.0f;
 		break;
 	default:
-		m_currentVelocity.x = 0.0f;
 		break;
 	}
 
 	m_currentPosition.x += m_currentVelocity.x * elapsedTime;
+
+	if (m_currentState == State::WALK && m_currentPosition.x >= m_jumpStartPosition.x)
+	{
+		m_currentState = State::IDLE;
+		m_currentVelocity.x = 0.0f;
+		m_currentPosition = m_jumpStartPosition;
+	}
 
 	return m_currentPosition;
 }

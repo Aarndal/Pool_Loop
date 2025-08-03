@@ -67,6 +67,7 @@ private:
 	bool m_isFalling{ false };
 	bool m_isRotating{ false };
 
+	float m_waitingTime{ 0.0f };
 	float m_currentRotationAngle{ 0.0f };
 	float m_currentAngularSpeed{ 0.0f };
 	float m_angularBoost{ 1.0f };
@@ -74,6 +75,7 @@ private:
 	olc::vf2d m_currentVelocity{ 0.0f, 0.0f };
 	olc::vf2d m_currentPosition{ 0.0f, 0.0f };
 	olc::vf2d m_jumpDirection{ 0.0f, 0.0f };
+	olc::vf2d m_jumpStartPosition{ 0.0f, 0.0f };
 	olc::vf2d m_jumpEndPosition{ 0.0f, 0.0f };
 
 

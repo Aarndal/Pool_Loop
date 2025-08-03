@@ -1,8 +1,8 @@
+#include <cassert>
 #include "GameScene.h"
 #include "PlayerData.h"
 #include "PlayerCharacter.h"
 #include "SceneManager.h"
-#include <cassert>
 #include "Score.h"
 
 namespace
@@ -44,6 +44,16 @@ void GameScene::update(float elapsedTime)
 	switch (m_playerCharacter->getCurrentState())
 	{
 	case PlayerCharacter::State::START:
+	{
+		m_playerCharacter->moveHorizontal(elapsedTime, PlayerCharacter::Movement::NONE);
+		break;
+	}
+	case PlayerCharacter::State::WALK:
+	{
+		m_playerCharacter->moveHorizontal(elapsedTime, PlayerCharacter::Movement::RIGHT);
+		break;
+	}
+	case PlayerCharacter::State::IDLE:
 		if (m_engine->GetKey(olc::Key::SPACE).bPressed)
 			m_playerCharacter->jump();
 		break;
