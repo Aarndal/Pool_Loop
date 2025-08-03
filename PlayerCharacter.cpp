@@ -18,6 +18,10 @@ bool PlayerCharacter::jump(float elapsedTime, const olc::PixelGameEngine& engine
 	if (m_currentState == State::START || m_currentState == State::IDLE)
 	{
 		m_jumpStartPosition = m_currentPosition;
+
+		m_jumpEndPosition.x = m_jumpStartPosition.x + 10.0f;
+		m_jumpEndPosition.y = m_jumpStartPosition.y - 10.0f;
+
 		m_currentState = State::JUMP;
 		return true;
 	}
@@ -47,33 +51,31 @@ olc::vf2d PlayerCharacter::moveHorizontal(float elapsedTime, PlayerCharacter::Mo
 
 olc::vf2d PlayerCharacter::moveVertical(float elapsedTime, float gravity)
 {
-	if (m_currentState == State::FALL)
+	switch (m_currentState)
 	{
+	case PlayerCharacter::State::JUMP:
+		olc::vf2d jumpDirection = m_jumpEndPosition - m_jumpStartPosition;
+
+		m_currentVelocity = jumpDirection * 5.0f;
+
+		m_currentPosition += m_currentVelocity * elapsedTime;
+
+		float jumpHeight = m_currentPosition.y - m_jumpEndPosition.y;
+
+		if (jumpHeight <= 0.0f)
+			m_currentState = State::FALL;
+		break;
+	case PlayerCharacter::State::FALL:
 		m_currentVelocity.y += gravity * elapsedTime;
 
 		if (m_currentVelocity.y > m_data.getMaxFallSpeed())
 			m_currentVelocity.y = m_data.getMaxFallSpeed();
 
 		m_currentPosition.y += 0.5f * m_currentVelocity.y / m_data.getAirResistance() * elapsedTime;
-	}
-	else if (m_currentState == State::JUMP)
-	{
-		olc::vf2d jumpPosition{ m_jumpStartPosition.x + 10.0f , m_jumpStartPosition.y - 10.0f };
-
-		olc::vf2d jumpDirection = jumpPosition - m_jumpStartPosition;
-
-		m_currentVelocity = jumpDirection * 5.0f;
-
-		m_currentPosition += m_currentVelocity * elapsedTime;
-
-		float jumpHeight = m_currentPosition.y - jumpPosition.y;
-
-		if (jumpHeight <= 0.0f)
-			m_currentState = State::FALL;
-	}
-	else
-	{
+		break;
+	default:
 		m_currentVelocity.y = 0.0f;
+		break;
 	}
 
 	return m_currentPosition;
@@ -88,7 +90,7 @@ float PlayerCharacter::rotate(float elapsedTime, olc::PixelGameEngine& engine)
 
 	if (m_isRotating)
 	{
-		m_currentRotationAngle += m_data.getAngularSpeed() * elapsedTime;
+		m_currentRotationAngle += m_data.getAngularSpeed() * m_data.getAirResistance() * elapsedTime;
 
 		if (m_currentRotationAngle <= 360.0f)
 			m_currentRotationAngle -= 360.0f;

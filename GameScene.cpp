@@ -41,6 +41,7 @@ void GameScene::update(float elapsedTime)
 	m_engine->Clear(olc::WHITE);
 	const auto playerheight = m_playerCharacter->getPosition().y;
 
+	// Check playerCharacter state and handle input
 	switch (m_playerCharacter->getCurrentState())
 	{
 	case PlayerCharacter::State::START:

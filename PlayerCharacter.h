@@ -64,5 +64,6 @@ private:
 	olc::vf2d m_currentVelocity{ 0.0f, 0.0f };
 	olc::vf2d m_currentPosition{ 0.0f, 0.0f };
 	olc::vf2d m_jumpStartPosition{ 0.0f, 0.0f };
+	olc::vf2d m_jumpEndPosition{ 0.0f, 0.0f };
 };
 
