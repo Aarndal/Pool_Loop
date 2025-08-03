@@ -1,6 +1,7 @@
 #pragma once
 #include <olcPixelGameEngine.h>
 #include "IScene.h"
+#include "Button.h"
 
 class CharacterSelection : public IScene
 {
@@ -12,5 +13,6 @@ public:
 private:
 	olc::Renderable m_backgroundImage;
 	olc::PixelGameEngine* m_pge;
+	std::vector<Button> m_vecButtons;
 };
 

@@ -30,32 +30,6 @@ void MainMenu::update(float /*time*/)
 
 	for (auto& button : m_vecButtons)
 	{
-		if (button.hit(m_pge->GetMousePos()))
-		{
-			if (m_pge->GetMouse(0).bReleased && button.m_bPressed)
-			{
-				if (button.hit(m_pge->GetMousePos()))
-				{
-					button.invoke();
-				}
-			}
-			const auto mouseState = m_pge->GetMouse(0);
-			if (mouseState.bHeld || mouseState.bPressed)
-			{
-				button.draw(m_pge, Button::DrawingState::pressed);
-				button.m_bPressed = true;
-			}
-			else
-			{
-				button.draw(m_pge, Button::DrawingState::highlight);
-				button.m_bPressed = false;
-			}
-		}
-		else
-		{
-			button.draw(m_pge);
-		}
-
-
+		button.update(m_pge);
 	}
 }

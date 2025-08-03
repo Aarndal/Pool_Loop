@@ -33,8 +33,8 @@ public:
 	}
 
 	void loadImage();
-	bool hit(olc::vf2d point)const;
-	void invoke() const;
+
+	void update(olc::PixelGameEngine* pge);
 
 	enum class DrawingState
 	{
@@ -42,9 +42,13 @@ public:
 		pressed,
 		none
 	};
+
+private:
+	bool hit(olc::vf2d point)const;
+	void invoke() const;
 	void draw(olc::PixelGameEngine* pge, DrawingState state = DrawingState::none) const;
 	bool m_bPressed{ false };
-private:
+
 	BoundingBox2D m_bb;
 	std::function<void()> m_action;
 	std::variant< std::filesystem::path, olc::Renderable> m_image;
