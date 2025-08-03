@@ -5,7 +5,7 @@
 void PlayerCharacter::init(const olc::vf2d& startPosition)
 {
 	m_jumpStartPosition = startPosition;
-	m_currentPosition = { startPosition.x - 200, startPosition.y };
+	m_currentPosition = { startPosition.x - 650, startPosition.y };
 	m_currentVelocity = { 0.0f, 0.0f };
 	m_currentRotationAngle = 0.0f;
 	m_isFalling = false;
@@ -74,7 +74,7 @@ olc::vf2d PlayerCharacter::moveHorizontal(float elapsedTime, PlayerCharacter::Mo
 	case PlayerCharacter::State::WALK:
 	{
 		m_currentVelocity.x = m_data->getLinearSpeed();
-		//wiggle();
+		//TODO: wiggle();
 		break;
 	}
 	case PlayerCharacter::State::FALL:

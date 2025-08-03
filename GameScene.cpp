@@ -13,7 +13,7 @@ namespace
 
 GameScene::GameScene(olc::PixelGameEngine* engine)
 	: m_engine{ engine }
-	, m_startPosition{ cameraStartPos(engine) + olc::vf2d{ 500.f,400.f } }
+	, m_startPosition{ cameraStartPos(engine) + olc::vf2d{ 550.f,375.f } }
 	, camera{ cameraStartPos(engine)}
 {
 }
@@ -104,6 +104,4 @@ void GameScene::update(float elapsedTime)
 	m_background.drawBG(*m_engine, camera);
 	m_playerCharacter->draw(*m_engine, camera);
 	m_background.drawFG(*m_engine, camera);
-	/*olc::vf2d size{ 50.f,100.f };
-	m_engine->DrawRectDecal(m_playerCharacter->getPosition(), size, olc::RED);*/
 }
