@@ -11,13 +11,13 @@ namespace
 	}
 	Logo::Letter createO_2(olc::vf2d pos)
 	{
-		Logo::Letter O_2{ .pos = pos + olc::vf2d{400.f,0},.posMax = pos + olc::vf2d{600.f,0},.posMin = pos ,.dir = {0.f,0.f},.image = {} };
+		Logo::Letter O_2{ .pos = pos + olc::vf2d{400.f,0},.posMax = pos + olc::vf2d{400.f,50.f},.posMin = pos + olc::vf2d{400.f,-50.f} ,.dir = {0.f,1.f},.image = {} };
 		O_2.image.Load("resources\\Title_O_2.png");
 		return O_2;
 	}
 	Logo::Letter createO_1(olc::vf2d pos)
 	{
-		Logo::Letter O_1{ .pos = pos + olc::vf2d{200.f,0},.posMax = pos + olc::vf2d{600.f,0},.posMin = pos ,.dir = {0.f,0.f},.image = {} };
+		Logo::Letter O_1{ .pos = pos + olc::vf2d{200.f,0},.posMax = pos + olc::vf2d{200.f,50.f},.posMin = pos + olc::vf2d{200.f,-50.f} ,.dir = {0.f,-1.f},.image = {} };
 		O_1.image.Load("resources\\Title_O_1.png");
 		return O_1;
 	}
@@ -64,12 +64,20 @@ void Logo::updateLetter(float fDeltaTime, Logo::Letter& letter)
 	{
 		letter.dir = { -1.f,0.f };
 	}
+	if (letter.pos.y < letter.posMin.y)
+	{
+		letter.dir = { 0.f,1.f };
+	}
+	if (letter.pos.y > letter.posMax.y)
+	{
+		letter.dir = { 0.f,-1.f };
+	}
 }
 
 
 void Logo::draw(olc::PixelGameEngine* pge)
 {
-	std::ranges::sort(m_vecLetters, std::less{}, &Letter::dir);
+	std::ranges::sort(m_vecLetters, std::less{}, [](const Letter& l) {return l.dir.x; });
 	for (auto& letter : m_vecLetters)
 	{
 		drawLetter(pge, letter);
