@@ -8,6 +8,7 @@ public:
 	void move(olc::vf2d offset) 
 	{
 		m_offset += offset;
+		m_offset.y = m_offset.y > 0.f ? 0.f : m_offset.y;
 	}
 	olc::vf2d transform(olc::vf2d pos) const
 	{
