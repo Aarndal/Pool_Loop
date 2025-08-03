@@ -11,8 +11,8 @@ MainMenu::MainMenu(olc::PixelGameEngine* pge)
 	: m_pge{pge}
 {
 	const auto posX = 0.5f * (pge->GetScreenSize().x - buttonSize.x);
-	m_vecButtons.emplace_back(BoundingBox2D{ {posX,300},buttonSize + olc::vf2d{870,300}  },"resources\\Button_Start.png", [=]() {SceneManager::getInstance().changeScene(SceneManager::Scene::characterSelection); });
-	m_vecButtons.emplace_back(BoundingBox2D{ {posX,500},buttonSize + olc::vf2d{870,500} },"resources\\Button_Quit.png", [=]() {SceneManager::getInstance().changeScene(SceneManager::Scene::quit); });
+	m_vecButtons.emplace_back(BoundingBox2D{ {posX,500},buttonSize + olc::vf2d{870,500}  },"resources\\Button_Start.png", [=]() {SceneManager::getInstance().changeScene(SceneManager::Scene::characterSelection); });
+	m_vecButtons.emplace_back(BoundingBox2D{ {posX,650},buttonSize + olc::vf2d{870,650} },"resources\\Button_Quit.png", [=]() {SceneManager::getInstance().changeScene(SceneManager::Scene::quit); });
 }
 
 void MainMenu::init(const std::shared_ptr<ISceneData>&)
@@ -22,7 +22,7 @@ void MainMenu::init(const std::shared_ptr<ISceneData>&)
 	{
 		button.loadImage();
 	}
-	m_logo = Logo{ {500.f,50.f} };
+	m_logo = Logo{ {500.f,100.f} };
 }
 
 void MainMenu::update(float time)
