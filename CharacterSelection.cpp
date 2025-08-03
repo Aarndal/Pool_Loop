@@ -7,8 +7,9 @@ namespace
 	std::vector<std::string> vecCharacterNames
 	{
 		"Cat_00",
-		"Cat_00",
-		"Cat_00"
+		"Cat_01",
+		"Cat_02",
+		"Cat_03",
 	};
 
 	const olc::vf2d buttonSize{100.f,100.f};
