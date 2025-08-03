@@ -2,8 +2,7 @@
 #include "Camera.h"
 #include "GameSceneBackground.h"
 
-// Initialization methods
-void PlayerCharacter::init(const olc::vf2d& startPosition) //TODO: Add jumpPosition
+void PlayerCharacter::init(const olc::vf2d& startPosition) //TODO: Add EndPosition
 {
 	m_currentPosition = startPosition;
 	m_currentVelocity = { 0.0f, 0.0f };
@@ -38,13 +37,16 @@ bool PlayerCharacter::jump()
 
 		m_jumpEndPosition =
 		{
-			jumpStartPosition.x + 100.0f,
-			jumpStartPosition.y - 100.0f,
+			jumpStartPosition.x + 500.0f,
+			jumpStartPosition.y - 150.0f,
 		};
 
 		m_jumpDirection = (m_jumpEndPosition - jumpStartPosition).norm();
 
 		m_currentState = State::JUMP;
+
+		increaseCurrentRotationAngle(acosf(m_jumpDirection.dot(olc::vf2d{ 0.0f, 1.0f })));
+
 		return true;
 	}
 
@@ -77,9 +79,9 @@ olc::vf2d PlayerCharacter::moveVertical(float elapsedTime, float gravity)
 	{
 	case PlayerCharacter::State::JUMP:
 	{
-		m_currentRotationAngle = acosf(m_jumpDirection.dot(olc::vf2d{ 1.0f, 0.0f }));
+		/*increaseCurrentRotationAngle(acosf(m_jumpDirection.dot(olc::vf2d{ 0.0f, 1.0f })));*/
 
-		m_currentVelocity = m_jumpDirection * 100.0f;
+		m_currentVelocity = m_jumpDirection * 300.0f;
 		m_currentPosition += m_currentVelocity * elapsedTime;
 
 		float currentJumpHeight = m_jumpEndPosition.y - m_currentPosition.y;

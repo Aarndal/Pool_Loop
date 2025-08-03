@@ -12,7 +12,7 @@ namespace
 
 GameScene::GameScene(olc::PixelGameEngine* engine)
 	: m_engine{ engine }
-	, m_startPosition{ cameraStartPos(engine) + olc::vf2d{ 300.f,300.f } }
+	, m_startPosition{ cameraStartPos(engine) + olc::vf2d{ 500.f,400.f } }
 	, camera{ cameraStartPos(engine)}
 {
 }

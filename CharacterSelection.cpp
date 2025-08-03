@@ -22,7 +22,7 @@ namespace
 	{
 		return { BoundingBox2D{ pos, buttonSize + pos }, "resources\\Icon_"+ name +".png", [=]()
 			{
-				auto pData = std::make_shared<PlayerData>(1, 0.2f, 50.0f, 45.0f, 100.0f);
+				auto pData = std::make_shared<PlayerData>(1, 0.1f, 75.0f, 60.0f, 200.0f);
 
 				pData->init(
 					{
