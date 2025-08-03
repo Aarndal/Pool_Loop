@@ -30,13 +30,15 @@ public:
 		RIGHT,
 	};
 
+	// Initialization methods
+	void init(const olc::vf2d& startPosition);
+
 	// Getters and Setters
 	bool getIsFalling() const { return m_isFalling; }
 	olc::vf2d getPosition() const { return m_currentPosition; }
 	State getCurrentState() const { return m_currentState; }
-
-	// Initialization methods
-	void init(const olc::vf2d& startPosition);
+	
+	float getCurrentAirResistance(Movement movement);
 
 	// Movement methods
 	bool jump();

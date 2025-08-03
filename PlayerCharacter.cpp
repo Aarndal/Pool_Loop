@@ -13,6 +13,23 @@ void PlayerCharacter::init(const olc::vf2d& startPosition) //TODO: Add jumpPosit
 	m_isInitialized = true;
 }
 
+float PlayerCharacter::getCurrentAirResistance(Movement movement)
+{
+	float currentAirResistance{ 0.5f };
+
+	if (!m_isRotating)
+	{
+		float lerpFactor{ abs(sin(m_currentRotationAngle)) };
+
+		if (movement == Movement::NONE)
+			lerpFactor = 1 - lerpFactor;
+
+		currentAirResistance = std::lerp(m_data->getAirResistance(), 2.0f, lerpFactor);
+	}
+
+	return currentAirResistance;
+}
+
 bool PlayerCharacter::jump()
 {
 	if (m_currentState == State::START || m_currentState == State::IDLE)
@@ -49,7 +66,7 @@ olc::vf2d PlayerCharacter::moveHorizontal(float elapsedTime, PlayerCharacter::Mo
 		break;
 	}
 
-	m_currentVelocity /= m_data->getAirResistance();
+	m_currentVelocity /= getCurrentAirResistance(moveDirection);
 
 	m_currentPosition.x += m_currentVelocity.x * elapsedTime;
 
@@ -81,12 +98,7 @@ olc::vf2d PlayerCharacter::moveVertical(float elapsedTime, float gravity)
 	{
 		m_currentVelocity.y += gravity * elapsedTime;
 
-		float currentAirResistance{ 0.5f };
-
-		if (!m_isRotating)
-			currentAirResistance = std::lerp(m_data->getAirResistance(), 2.0f, abs(cos(m_currentRotationAngle)));
-
-		m_currentVelocity /= currentAirResistance;
+		m_currentVelocity /= getCurrentAirResistance(Movement::NONE);
 
 		if (m_currentVelocity.y > m_data->getMaxFallSpeed())
 			m_currentVelocity.y = m_data->getMaxFallSpeed();
