@@ -111,6 +111,11 @@ olc::vf2d PlayerCharacter::moveVertical(float elapsedTime, float gravity)
 		break;
 	}
 
+	if (m_currentPosition.y > 1100)
+	{
+		m_currentState = PlayerCharacter::State::END;
+	}
+
 	return m_currentPosition;
 }
 
