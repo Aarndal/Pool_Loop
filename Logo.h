@@ -19,10 +19,7 @@ public:
 private:
 	void drawLetter(olc::PixelGameEngine* pge, const Logo::Letter& letter);
 	void updateLetter(float fDeltaTime, Logo::Letter& letter);
-	//Letter L;
-	//Letter O_1;
-	//Letter O_2;
-	//Letter P;
+
 	std::vector<Letter> m_vecLetters;
 };
 
