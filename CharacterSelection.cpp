@@ -6,7 +6,7 @@ namespace
 {
 	std::vector<std::string> vecCharacterNames
 	{
-		"Cat_00",
+		/*"Cat_00",*/
 		"Cat_01",
 		"Cat_02",
 		"Cat_03",
@@ -34,7 +34,7 @@ namespace
 
 CharacterSelection::CharacterSelection(olc::PixelGameEngine* pge) : m_pge{pge}
 {
-	olc::vf2d pos{ 300,300 };
+	olc::vf2d pos{ 300,200 };
 	for (const auto& name : vecCharacterNames)
 	{
 		m_vecButtons.emplace_back(createButton(pos,name));
