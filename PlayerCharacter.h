@@ -1,5 +1,6 @@
 #pragma once
 
+#include <numbers>
 #include <olcPixelGameEngine.h>
 #include "PlayerData.h"
 #include "Animation.h"
@@ -37,7 +38,10 @@ public:
 	bool getIsFalling() const { return m_isFalling; }
 	olc::vf2d getPosition() const { return m_currentPosition; }
 	State getCurrentState() const { return m_currentState; }
-	
+
+	float getCurrentRotationAngle() const { return m_currentRotationAngle; }
+	float getCurrentRotationAngleDegrees() const { return m_currentRotationAngle * 180.0f / static_cast<float>(std::numbers::pi); }
+
 	float getCurrentAirResistance(Movement movement);
 
 	// Movement methods
@@ -60,12 +64,38 @@ private:
 	bool m_isInitialized{ false };
 	bool m_isFalling{ false };
 	bool m_isRotating{ false };
-	
-	float m_currentRotationAngle{ 0.0f};
+
+	float m_currentRotationAngle{ 0.0f };
 
 	olc::vf2d m_currentVelocity{ 0.0f, 0.0f };
 	olc::vf2d m_currentPosition{ 0.0f, 0.0f };
 	olc::vf2d m_jumpDirection{ 0.0f, 0.0f };
 	olc::vf2d m_jumpEndPosition{ 0.0f, 0.0f };
 
+
+	bool increaseCurrentRotationAngle(float deltaAngle)
+	{
+		if (std::fabs(deltaAngle) > static_cast<float>(2.0 * std::numbers::pi)) // Don't allow rotation angles greater than 360 degrees
+			return false;
+
+		m_currentRotationAngle += deltaAngle;
+
+		if (m_currentRotationAngle >= static_cast<float>(2.0 * std::numbers::pi))
+			m_currentRotationAngle -= static_cast<float>(2.0 * std::numbers::pi);
+
+		if (m_currentRotationAngle < 0.0f)
+			m_currentRotationAngle += static_cast<float>(2.0 * std::numbers::pi);
+
+		return true;
+	}
+
+	bool increaseCurrentRotationAngleDegrees(float deltaAngleDegrees)
+	{
+		if (std::fabs(deltaAngleDegrees) > 360.0f) // Don't allow rotation angles greater than 360 degrees
+			return false;
+		
+		float deltaAngle = deltaAngleDegrees * static_cast<float>(std::numbers::pi) / 180.0f;
+
+		return increaseCurrentRotationAngle(deltaAngle);
+	}
 };

@@ -19,7 +19,7 @@ float PlayerCharacter::getCurrentAirResistance(Movement movement)
 
 	if (!m_isRotating)
 	{
-		float lerpFactor{ abs(cos(m_currentRotationAngle)) };
+		float lerpFactor{ std::fabs(std::sinf(getCurrentRotationAngle())) };
 
 		if (movement == Movement::NONE)
 			lerpFactor = 1 - lerpFactor;
@@ -123,10 +123,7 @@ float PlayerCharacter::rotate(float elapsedTime, olc::PixelGameEngine& engine)
 
 	if (m_isRotating)
 	{
-		m_currentRotationAngle += m_data->getAngularSpeed() * elapsedTime;
-
-		if (m_currentRotationAngle >= 360.0f) // Reset rotation angle if it exceeds 360 degrees
-			m_currentRotationAngle -= 360.0f;
+		increaseCurrentRotationAngleDegrees(m_data->getAngularSpeed() * elapsedTime);
 	}
 
 	return m_currentRotationAngle;

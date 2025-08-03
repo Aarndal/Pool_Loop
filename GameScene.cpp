@@ -54,6 +54,8 @@ void GameScene::update(float elapsedTime)
 	{
 		m_playerCharacter->rotate(elapsedTime, *m_engine);
 
+		m_playerCharacter->moveVertical(elapsedTime, m_gravity);
+		
 		if (m_engine->GetKey(olc::Key::A).bHeld)
 		{
 			m_playerCharacter->moveHorizontal(elapsedTime, PlayerCharacter::Movement::LEFT);
@@ -66,8 +68,6 @@ void GameScene::update(float elapsedTime)
 		{
 			m_playerCharacter->moveHorizontal(elapsedTime, PlayerCharacter::Movement::NONE);
 		}
-
-		m_playerCharacter->moveVertical(elapsedTime, m_gravity);
 
 		break;
 	}
