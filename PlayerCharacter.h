@@ -39,7 +39,7 @@ public:
 	void init(const olc::vf2d& startPosition);
 
 	// Movement methods
-	bool jump(float elapsedTime, const olc::PixelGameEngine& engine);
+	bool jump();
 	olc::vf2d moveHorizontal(float elapsedTime, Movement moveDirection);
 	olc::vf2d moveVertical(float elapsedTime, float gravity);
 	float rotate(float elapsedTime, olc::PixelGameEngine& engine);

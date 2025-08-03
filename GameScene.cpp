@@ -43,7 +43,7 @@ void GameScene::update(float elapsedTime)
 	{
 	case PlayerCharacter::State::START:
 		if (m_engine->GetKey(olc::Key::SPACE).bPressed)
-			m_playerCharacter->jump(elapsedTime, *m_engine);
+			m_playerCharacter->jump();
 		break;
 	case PlayerCharacter::State::JUMP:
 	{

@@ -13,7 +13,7 @@ void PlayerCharacter::init(const olc::vf2d& startPosition) //TODO: Add jumpPosit
 	m_isInitialized = true;
 }
 
-bool PlayerCharacter::jump(float elapsedTime, const olc::PixelGameEngine& engine)
+bool PlayerCharacter::jump()
 {
 	if (m_currentState == State::START || m_currentState == State::IDLE)
 	{
@@ -73,12 +73,13 @@ olc::vf2d PlayerCharacter::moveVertical(float elapsedTime, float gravity)
 		{
 			m_currentState = State::FALL;
 			m_isRotating = true;
+			m_currentVelocity = { 0.0f, 0.0f };
 		}
 		break;
 	}
 	case PlayerCharacter::State::FALL:
 	{
-		m_currentVelocity.y -= gravity * elapsedTime / m_data->getAirResistance();
+		m_currentVelocity.y += gravity * elapsedTime / m_data->getAirResistance();
 
 		if (m_currentVelocity.y > m_data->getMaxFallSpeed())
 			m_currentVelocity.y = m_data->getMaxFallSpeed();
