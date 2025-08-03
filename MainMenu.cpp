@@ -11,7 +11,7 @@ MainMenu::MainMenu(olc::PixelGameEngine* pge)
 
 void MainMenu::init()
 {
-	m_backgroundImage.Load("resources\\Main_Menu.png");
+	m_backgroundImage.Load("resources\\BG_Menu.png");
 	for (auto& button : m_vecButtons)
 	{
 		button.loadImage();

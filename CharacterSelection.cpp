@@ -8,7 +8,7 @@ CharacterSelection::CharacterSelection(olc::PixelGameEngine* pge) : m_pge{pge}
 
 void CharacterSelection::init()
 {
-	m_backgroundImage.Load("resources\\Character_Menu.png");
+	m_backgroundImage.Load("resources\\BG_Menu.png");
 }
 
 void CharacterSelection::update(float /*time*/)
