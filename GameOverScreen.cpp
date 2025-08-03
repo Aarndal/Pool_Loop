@@ -32,7 +32,7 @@ void GameOverScreen::update(float )
 		m_pge->DrawDecal({}, m_backgroundImageFG.Decal());
 	}
 
-	if (m_pge->GetKey(olc::Key::SPACE).bPressed || m_pge->GetMouse(0).bPressed)
+	if (m_pge->GetKey(olc::Key::SPACE).bPressed || m_pge->GetMouse(0).bReleased)
 	{
 		SceneManager::getInstance().changeScene(SceneManager::Scene::mainMenu);
 	}
