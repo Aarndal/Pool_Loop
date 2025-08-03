@@ -138,6 +138,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CharacterSelection.cpp" />
+    <ClCompile Include="GameOverScreen.cpp" />
     <ClCompile Include="GameSceneBackground.cpp" />
     <ClCompile Include="Logo.cpp" />
     <ClCompile Include="MainMenu.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CharacterSelection.h" />
+    <ClInclude Include="GameOverScreen.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="GameSceneBackground.h" />
     <ClInclude Include="IScene.h" />

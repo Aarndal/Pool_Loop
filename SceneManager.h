@@ -19,6 +19,7 @@ public:
 		mainMenu,
 		characterSelection,
 		game,
+		gameOver,
 		quit
 	};
 	void changeScene(Scene newSchene, const std::shared_ptr<ISceneData>& data = nullptr);
