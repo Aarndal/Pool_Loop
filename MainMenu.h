@@ -7,7 +7,7 @@ class MainMenu : public IScene
 {
 public:
 	MainMenu(olc::PixelGameEngine* pge);
-	void init() override;
+	void init(const std::shared_ptr<ISceneData>& data = nullptr) override;
 	void update(float time) override;
 private:
 	olc::Renderable m_backgroundImage;

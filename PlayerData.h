@@ -1,12 +1,12 @@
 #pragma once
 #include <olcPixelGameEngine.h>
+#include "IScene.h"
 
-struct PlayerData
+struct PlayerData : public ISceneData
 {
 	PlayerData(unsigned int id, float airResistance, float linearSpeed, float angularSpeed, float maxFallSpeed) : m_id(id), m_airResistance(airResistance), m_linearSpeed(linearSpeed), m_angularSpeed(angularSpeed), m_maxFallSpeed(maxFallSpeed)
 	{
 	}
-
 public:
 	bool init(const std::vector<std::filesystem::path>& vecImagePaths);
 

@@ -13,7 +13,7 @@ class GameScene : public IScene
 public:
 	GameScene(olc::PixelGameEngine* engine);
 
-	void init() override;
+	void init(const std::shared_ptr<ISceneData>& data) override;
 	void update(float elapsedTime) override;
 
 private:

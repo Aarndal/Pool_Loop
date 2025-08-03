@@ -9,7 +9,7 @@ class Camera;
 class PlayerCharacter
 {
 public:
-	PlayerCharacter(PlayerData&& data) : m_data{ std::move(data) }
+	PlayerCharacter(std::shared_ptr<PlayerData> data) : m_data{ std::move(data) }
 	{
 	}
 
@@ -47,7 +47,7 @@ public:
 	bool draw(olc::PixelGameEngine& engine, const Camera& camera);
 
 private:
-	PlayerData m_data;
+	std::shared_ptr<PlayerData> m_data;
 	Animation m_animator{ {
 			"resources\\PC_Cat_00_Stretched.png",
 			"resources\\PC_Cat_00_Round.png"

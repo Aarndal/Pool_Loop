@@ -1,6 +1,8 @@
 #include "GameScene.h"
 #include "PlayerData.h"
 #include "PlayerCharacter.h"
+#include "SceneManager.h"
+#include <cassert>
 
 namespace
 {
@@ -15,16 +17,11 @@ GameScene::GameScene(olc::PixelGameEngine* engine)
 {
 }
 
-void GameScene::init()
+void GameScene::init(const std::shared_ptr<ISceneData>& data)
 {
-	PlayerData playerData{ 1, 0.5f, 10.0f, 5.0f, 100.0f };
+	std::shared_ptr playerData = std::dynamic_pointer_cast<PlayerData>(data);
 
-	playerData.init(
-		{
-					"resources\\PC_Cat_00_Stretched.png",
-					"resources\\PC_Cat_00_Round.png"
-		}
-	);
+	assert(playerData);
 
 	if (!m_playerCharacter)
 	{

@@ -26,19 +26,19 @@ SceneManager& SceneManager::getInstance()
     return instance;
 }
 
-void SceneManager::changeScene(Scene newScene)
+void SceneManager::changeScene(Scene newScene, const std::shared_ptr<ISceneData>& data)
 {
-    m_nextScene = newScene;
+    m_nextScene = { newScene, data };
 }
 
 IScene* SceneManager::getCurrentScene(olc::PixelGameEngine* pge)
 {
     if (m_nextScene)
     {
-        m_currentScene = createSchene(*m_nextScene, pge);
+        m_currentScene = createSchene(m_nextScene->id, pge);
         if (m_currentScene)
         {
-            m_currentScene->init();
+            m_currentScene->init(m_nextScene->data);
         }
         m_nextScene = std::nullopt;
     }
