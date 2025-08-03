@@ -49,9 +49,9 @@ olc::vf2d PlayerCharacter::moveHorizontal(float elapsedTime, PlayerCharacter::Mo
 		break;
 	}
 
+	m_currentVelocity /= m_data->getAirResistance();
 
-	m_currentPosition.x += m_currentVelocity.x / m_data->getAirResistance() * elapsedTime;
-
+	m_currentPosition.x += m_currentVelocity.x * elapsedTime;
 
 	return m_currentPosition;
 }
@@ -64,7 +64,7 @@ olc::vf2d PlayerCharacter::moveVertical(float elapsedTime, float gravity)
 	{
 		m_currentRotationAngle = acosf(m_jumpDirection.dot(olc::vf2d{ 1.0f, 0.0f }));
 
-		m_currentVelocity = m_jumpDirection * 10.0f;
+		m_currentVelocity = m_jumpDirection * 100.0f;
 		m_currentPosition += m_currentVelocity * elapsedTime;
 
 		float currentJumpHeight = m_jumpEndPosition.y - m_currentPosition.y;
@@ -78,12 +78,12 @@ olc::vf2d PlayerCharacter::moveVertical(float elapsedTime, float gravity)
 	}
 	case PlayerCharacter::State::FALL:
 	{
-		m_currentVelocity.y += gravity * elapsedTime;
+		m_currentVelocity.y -= gravity * elapsedTime / m_data->getAirResistance();
 
 		if (m_currentVelocity.y > m_data->getMaxFallSpeed())
 			m_currentVelocity.y = m_data->getMaxFallSpeed();
 
-		m_currentPosition.y += 0.5f * m_currentVelocity.y / m_data->getAirResistance() * elapsedTime;
+		m_currentPosition.y += 0.5f * m_currentVelocity.y * elapsedTime;
 		break;
 	}
 	default:
