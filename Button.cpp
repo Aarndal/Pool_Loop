@@ -1,6 +1,10 @@
 #include "Button.h"
 
-
+namespace
+{
+	constexpr float  buttonHighlightSize = 5.f; // +5%
+	constexpr float  buttonPressedSize = -5.f;  // -5%
+}
 
 bool Button::hit(olc::vf2d point) const
 {
@@ -46,8 +50,8 @@ void Button::draw(olc::PixelGameEngine* pge, DrawingState state) const
 		{
 			switch (state)
 			{
-			case DrawingState::highlight: pge->DrawDecal(m_bb.min - 0.05f * size(m_bb), image.Decal(), {1.1f,1.1f}, olc::RED); break;
-			case DrawingState::pressed: pge->DrawDecal(m_bb.min+ 0.05f * size(m_bb), image.Decal(), {0.9f,0.9f}); break;
+			case DrawingState::highlight: pge->DrawDecal(m_bb.min - 0.5f * buttonHighlightSize / 100.f * size(m_bb), image.Decal(), olc::vf2d{1.f,1.f} + buttonHighlightSize/100.f); break;
+			case DrawingState::pressed: pge->DrawDecal(m_bb.min - 0.5f * buttonPressedSize / 100.f * size(m_bb), image.Decal(), olc::vf2d{ 1.f,1.f } + buttonPressedSize / 100.f); break;
 			case DrawingState::none: pge->DrawDecal(m_bb.min, image.Decal()); break;
 			}
 		} 
@@ -56,8 +60,8 @@ void Button::draw(olc::PixelGameEngine* pge, DrawingState state) const
 	);
 		
 
-#ifdef _DEBUG
-	pge->DrawRectDecal(m_bb.min, m_bb.max - m_bb.min, olc::RED);
-#endif
+//#ifdef _DEBUG
+//	pge->DrawRectDecal(m_bb.min, m_bb.max - m_bb.min, olc::RED);
+//#endif
 
 }
