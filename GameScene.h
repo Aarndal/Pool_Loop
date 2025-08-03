@@ -5,6 +5,7 @@
 #include "IScene.h"
 #include "PlayerCharacter.h"
 #include "Camera.h"
+#include "GameSceneBackground.h"
 
 class GameScene : public IScene
 {
@@ -19,7 +20,7 @@ private:
 	olc::PixelGameEngine* m_engine{};
 	olc::vf2d m_startPosition{ 500.f,300.f };
 
-	olc::Renderable m_background;
+	GameSceneBackground m_background{6};
 
 	std::optional<PlayerCharacter> m_playerCharacter{ };
 

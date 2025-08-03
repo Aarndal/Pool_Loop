@@ -1,21 +1,20 @@
 #include "Animation.h"
 
-namespace
-{
-	olc::Renderable loadImage(const std::filesystem::path& path)
-	{
-		olc::Renderable renderable;
-		renderable.Load(path.string());
-		return renderable;
-	}
 
-	std::vector<olc::Renderable> loadImages(const std::vector<std::filesystem::path>& vecImagePaths)
-	{
-		std::vector<olc::Renderable> renderables;
-		std::ranges::transform(vecImagePaths, std::back_inserter(renderables), loadImage);
-		return renderables;
-	}
+olc::Renderable loadImage(const std::filesystem::path& path)
+{
+	olc::Renderable renderable;
+	renderable.Load(path.string());
+	return renderable;
 }
+
+std::vector<olc::Renderable> loadImages(const std::vector<std::filesystem::path>& vecImagePaths)
+{
+	std::vector<olc::Renderable> renderables;
+	std::ranges::transform(vecImagePaths, std::back_inserter(renderables), loadImage);
+	return renderables;
+}
+
 
 Animation::Animation(const std::vector<std::filesystem::path>& vecImagePaths, float frameTime) 
 	: m_vecImages{ loadImages(vecImagePaths) }

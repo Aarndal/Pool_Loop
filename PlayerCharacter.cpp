@@ -1,5 +1,6 @@
 #include "PlayerCharacter.h"
 #include "Camera.h"
+#include "GameSceneBackground.h"
 
 // Initialization methods
 void PlayerCharacter::init(const olc::vf2d& startPosition)

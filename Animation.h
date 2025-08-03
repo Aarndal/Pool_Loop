@@ -1,5 +1,10 @@
 #pragma once
 #include <olcPixelGameEngine.h>
+
+olc::Renderable loadImage(const std::filesystem::path& path);
+std::vector<olc::Renderable> loadImages(const std::vector<std::filesystem::path>& vecImagePaths);
+
+
 class Animation
 {
 public:

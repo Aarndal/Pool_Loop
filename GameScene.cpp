@@ -33,7 +33,7 @@ void GameScene::init()
 
 	m_playerCharacter->init(m_startPosition);
 
-	m_background.Load("resources\\BG_Top.png");
+	m_background.load();
 }
 
 void GameScene::update(float elapsedTime)
@@ -67,7 +67,7 @@ void GameScene::update(float elapsedTime)
 	}
 	camera.move({ 0,m_playerCharacter->getPosition().y - playerheight });
 	// Draw
-	m_engine->DrawDecal(camera.transform(cameraStartPos(m_engine)), m_background.Decal());
+	m_background.draw(*m_engine, camera);
 	m_playerCharacter->draw(*m_engine, camera);
 
 	/*olc::vf2d size{ 50.f,100.f };
