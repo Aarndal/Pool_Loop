@@ -14,6 +14,7 @@ public:
 private:
 	std::vector<olc::Renderable> m_vecImagesBG;
 	std::vector<olc::Renderable> m_vecImagesFG;
+	olc::Renderable m_instructions;
 	size_t m_imageCount;
 };
 
