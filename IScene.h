@@ -11,5 +11,5 @@ class IScene
 {
 public:
 	virtual void init(const std::shared_ptr<ISceneData>& data = nullptr) = 0;
-	virtual void update(float time) = 0;
+	virtual void update(float elapsedTime) = 0;
 };

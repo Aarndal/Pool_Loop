@@ -7,8 +7,8 @@
 #include "InputHandler.h"
 #include "Animation.h"
 #include "Score.h"
-#include "Camera.h"
 
+class GameScene;
 class Camera;
 
 constexpr float START_POSITION_OFFSET{ -650.0f };
@@ -16,9 +16,11 @@ constexpr float START_POSITION_OFFSET{ -650.0f };
 class PlayerCharacter
 {
 public:
-	PlayerCharacter(olc::PixelGameEngine* pEngine, std::shared_ptr<PlayerData> data) : m_spData{ std::move(data) }, m_inputHandler{ pEngine }
+	PlayerCharacter(olc::PixelGameEngine* pEngine, GameScene* pCurrentGameScene, std::shared_ptr<PlayerData> data) : m_pEngine{ pEngine
+	}, m_pCurrentScene{ pCurrentGameScene }, m_spData{
+		std::move(data)
+	}, m_inputHandler{ pEngine }
 	{
-		m_pEngine = pEngine;
 		m_currentAngularSpeed = m_spData->getAngularSpeed();
 	}
 
@@ -36,6 +38,7 @@ public:
 	void init(const olc::vf2d& startPosition);
 
 	// Getters and Setters
+	[[nodiscard]] bool getIsInitialized() const { return m_isInitialized; }
 	[[nodiscard]] bool getIsFalling() const { return m_isFalling; }
 	[[nodiscard]] bool getIsRotating() const { return m_isRotating; }
 	[[nodiscard]] olc::vf2d getPosition() const { return m_currentPosition; }
@@ -46,11 +49,14 @@ public:
 
 	[[nodiscard]] float getCurrentAirResistance(InputHandler::Movement movement);
 
+	void update(float elapsedTime);
+
 	// Movement methods
-	bool jump();
-	olc::vf2d moveHorizontal(float elapsedTime, InputHandler::Movement moveDirection);
-	olc::vf2d moveVertical(float elapsedTime, float gravity);
-	float rotate(float elapsedTime);
+	void wait(float elapsedTime);
+	void jump();
+	void moveHorizontal(float elapsedTime, InputHandler::Movement moveDirection);
+	void moveVertical(float elapsedTime);
+	void rotate(float elapsedTime);
 
 	// Animation methods
 	bool draw(const Camera& camera);
@@ -58,6 +64,7 @@ public:
 private:
 	// Members
 	olc::PixelGameEngine* m_pEngine{ nullptr };
+	GameScene* m_pCurrentScene;
 	std::shared_ptr<PlayerData> m_spData;
 
 	InputHandler m_inputHandler;

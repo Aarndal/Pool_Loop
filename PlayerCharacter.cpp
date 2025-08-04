@@ -1,5 +1,8 @@
 #include "PlayerCharacter.h"
 
+#include "GameScene.h"
+#include "SceneManager.h"
+
 void PlayerCharacter::init(const olc::vf2d& startPosition)
 {
 	m_jumpStartPosition = startPosition;
@@ -29,53 +32,90 @@ float PlayerCharacter::getCurrentAirResistance(InputHandler::Movement movement)
 	return currentAirResistance;
 }
 
-bool PlayerCharacter::jump()
+void PlayerCharacter::update(const float elapsedTime)
 {
-	if (m_currentState == State::IDLE)
-	{
-		olc::vf2d jumpStartPosition = m_currentPosition;
-
-		m_jumpEndPosition =
-		{
-			jumpStartPosition.x + 500.0f,
-			jumpStartPosition.y - 150.0f,
-		};
-
-		m_jumpDirection = (m_jumpEndPosition - jumpStartPosition).norm();
-
-		m_currentState = State::JUMP;
-
-		increaseCurrentRotationAngle(acosf(m_jumpDirection.dot(olc::vf2d{ 0.0f, -1.0f })));
-
-		return true;
-	}
-
-	return false;
-}
-
-olc::vf2d PlayerCharacter::moveHorizontal(float elapsedTime, InputHandler::Movement moveDirection)
-{
-	switch (m_currentState)
+	switch (this->getCurrentState())
 	{
 	case State::START:
 	{
-		m_currentVelocity.x = 0.0f;
-		m_waitingTime -= elapsedTime;
-
-		if (m_waitingTime <= 0.0f)
-		{
-			m_currentState = State::WALK;
-		}
-
+		this->wait(elapsedTime);
 		break;
 	}
 	case State::WALK:
 	{
-		m_currentVelocity.x = m_spData->getLinearSpeed();
-		//TODO: wiggle();
+		this->moveHorizontal(elapsedTime, InputHandler::Movement::RIGHT);
+		break;
+	}
+	case State::IDLE:
+		if (m_inputHandler.isJumpPressed())
+			this->jump();
+		break;
+	case State::JUMP:
+	{
+		this->moveVertical(elapsedTime);
 		break;
 	}
 	case State::FALL:
+	{
+		this->rotate(elapsedTime);
+
+		this->moveVertical(elapsedTime);
+
+		const InputHandler::Movement currentMoveDirection = m_inputHandler.getMovement();
+
+		this->moveHorizontal(elapsedTime, currentMoveDirection);
+		break;
+	}
+	case State::END:
+	{
+		const float targetPosX = 1920 - 1600 + 0.5 * 1600;
+
+		Score::getInstance().finaliseScore(
+			this->getCurrentRotationAngle(),
+			this->getIsRotating(),
+			std::abs(this->getPosition().x - targetPosX));
+		SceneManager::getInstance().changeScene(SceneManager::Scene::gameOver);
+		break;
+	}
+	}
+}
+
+void PlayerCharacter::wait(const float elapsedTime)
+{
+	m_currentVelocity.x = 0.0f;
+	m_waitingTime -= elapsedTime;
+
+	if (m_waitingTime <= 0.0f)
+	{
+		m_currentState = State::WALK;
+	}
+}
+
+void PlayerCharacter::jump()
+{
+	olc::vf2d jumpStartPosition = m_currentPosition;
+
+	m_jumpEndPosition =
+	{
+		jumpStartPosition.x + 500.0f,
+		jumpStartPosition.y - 150.0f,
+	};
+
+	m_jumpDirection = (m_jumpEndPosition - jumpStartPosition).norm();
+
+	increaseCurrentRotationAngle(acosf(m_jumpDirection.dot(olc::vf2d{ 0.0f, -1.0f })));
+
+	m_currentState = State::JUMP;
+}
+
+void PlayerCharacter::moveHorizontal(const float elapsedTime, const InputHandler::Movement moveDirection)
+{
+	if (m_currentState == State::WALK)
+	{
+		m_currentVelocity.x = m_spData->getLinearSpeed();
+		//TODO: wiggle();
+	}
+	else if (m_currentState == State::FALL)
 	{
 		switch (moveDirection)
 		{
@@ -88,17 +128,11 @@ olc::vf2d PlayerCharacter::moveHorizontal(float elapsedTime, InputHandler::Movem
 		case InputHandler::Movement::NONE:
 			m_currentVelocity.x = 0.0f;
 			break;
-		default:
-			m_currentVelocity.x = 0.0f;
-			break;
 		}
-		break;
 	}
-	case State::END:
+	else
+	{
 		m_currentVelocity.x = 0.0f;
-		break;
-	default:
-		break;
 	}
 
 	m_currentPosition.x += m_currentVelocity.x * elapsedTime;
@@ -109,15 +143,11 @@ olc::vf2d PlayerCharacter::moveHorizontal(float elapsedTime, InputHandler::Movem
 		m_currentVelocity.x = 0.0f;
 		m_currentPosition = m_jumpStartPosition;
 	}
-
-	return m_currentPosition;
 }
 
-olc::vf2d PlayerCharacter::moveVertical(float elapsedTime, float gravity)
+void PlayerCharacter::moveVertical(const float elapsedTime)
 {
-	switch (m_currentState)
-	{
-	case State::JUMP:
+	if (m_currentState == State::JUMP)
 	{
 		//increaseCurrentRotationAngle(acosf(m_jumpDirection.dot(olc::vf2d{ 0.0f, 1.0f })));
 
@@ -132,35 +162,31 @@ olc::vf2d PlayerCharacter::moveVertical(float elapsedTime, float gravity)
 			m_isRotating = true;
 			m_currentVelocity = { 0.0f, 0.0f };
 		}
-		break;
 	}
-	case State::FALL:
+	else if (m_currentState == State::FALL)
 	{
-		m_currentVelocity.y += 0.5f * gravity * elapsedTime;
+		m_currentVelocity.y += 0.5f * m_pCurrentScene->getGravity() * elapsedTime;
 
 		m_currentVelocity.y = std::min(m_currentVelocity.y, m_spData->getMaxFallSpeed());
 
 		m_currentVelocity.y /= getCurrentAirResistance(InputHandler::Movement::NONE);
 
 		m_currentPosition.y += m_currentVelocity.y * elapsedTime;
-		break;
 	}
-	default:
+	else
+	{
 		m_currentVelocity.y = 0.0f;
-		break;
 	}
 
 	if (m_currentPosition.y > 1100)
 	{
-		m_currentState = PlayerCharacter::State::END;
+		m_currentState = State::END;
 	}
-
-	return m_currentPosition;
 }
 
-float PlayerCharacter::rotate(const float elapsedTime)
+void PlayerCharacter::rotate(const float elapsedTime)
 {
-	if (m_inputHandler.isKeyHeld(olc::Key::SPACE))
+	if (m_inputHandler.isKeyPressed(olc::Key::SPACE))
 	{
 		m_isRotating = !m_isRotating;
 	}
@@ -178,8 +204,6 @@ float PlayerCharacter::rotate(const float elapsedTime)
 		m_currentAngularSpeed = m_spData->getAngularSpeed();
 		m_angularBoost = 0.0f;
 	}
-
-	return m_currentRotationAngle;
 }
 
 bool PlayerCharacter::draw(const Camera& camera)

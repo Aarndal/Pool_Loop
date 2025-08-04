@@ -11,10 +11,10 @@ namespace
 }
 
 
-GameScene::GameScene(olc::PixelGameEngine* engine)
-	: m_pEngine{ engine }
-	, m_startPosition{ cameraStartPos(engine) + olc::vf2d{ 550.f,375.f } }
-	, camera{ cameraStartPos(engine)}
+GameScene::GameScene(olc::PixelGameEngine* pEngine)
+	: m_pEngine{ pEngine }
+	, m_startPosition{ cameraStartPos(pEngine) + olc::vf2d{ 550.f,375.f } }
+	, m_camera{ cameraStartPos(pEngine) }
 {
 }
 
@@ -26,82 +26,34 @@ void GameScene::init(const std::shared_ptr<ISceneData>& data)
 
 	if (!m_playerCharacter)
 	{
-		m_playerCharacter = { m_pEngine, std::move(playerData) };
+		m_playerCharacter = { m_pEngine, this, std::move(playerData) };
 	}
 
-	m_playerCharacter->init(m_startPosition);
+	if (m_playerCharacter->getIsInitialized() == false)
+		m_playerCharacter->init(m_startPosition);
 
 	m_background.load();
 	Score::getInstance().resetScore();
 }
 
-void GameScene::update(float elapsedTime)
+void GameScene::update(const float elapsedTime)
 {
 	m_pEngine->Clear(olc::WHITE);
-	const auto playerheight = m_playerCharacter->getPosition().y;
 
-	// Check playerCharacter state and handle input
-	switch (m_playerCharacter->getCurrentState())
+	if (m_playerCharacter && m_playerCharacter->getIsInitialized() == true)
 	{
-	case PlayerCharacter::State::START:
-	{
-		/*m_playerCharacter->moveHorizontal(elapsedTime, PlayerCharacter::Movement::NONE);*/
-		break;
-	}
-	case PlayerCharacter::State::WALK:
-	{
-		/*m_playerCharacter->moveHorizontal(elapsedTime, PlayerCharacter::Movement::RIGHT);*/
-		break;
-	}
-	case PlayerCharacter::State::IDLE:
-		/*if (m_pEngine->GetKey(olc::Key::SPACE).bPressed)
-			m_playerCharacter->jump();*/
-		break;
-	case PlayerCharacter::State::JUMP:
-	{
-		m_playerCharacter->moveVertical(elapsedTime, m_gravity);
-		break;
-	}
-	case PlayerCharacter::State::FALL:
-	{
-		m_playerCharacter->rotate(elapsedTime);
+		const auto playerHeight = m_playerCharacter->getPosition().y;
 
-		m_playerCharacter->moveVertical(elapsedTime, m_gravity);
-		
-		if (m_pEngine->GetKey(olc::Key::A).bHeld)
-		{
-			/*m_playerCharacter->moveHorizontal(elapsedTime, PlayerCharacter::Movement::LEFT);*/
-		}
-		else if (m_pEngine->GetKey(olc::Key::D).bHeld)
-		{
-			/*m_playerCharacter->moveHorizontal(elapsedTime, PlayerCharacter::Movement::RIGHT);*/
-		}
-		else
-		{
-			/*m_playerCharacter->moveHorizontal(elapsedTime, PlayerCharacter::Movement::NONE);*/
-		}
+		m_playerCharacter->update(elapsedTime);
 
-		break;
+		m_camera.move({ 0,m_playerCharacter->getPosition().y - playerHeight });
 	}
-	case PlayerCharacter::State::END:
-	{
-		const float targetPosX = 1920 - 1600 + 0.5 * 1600;
-
-		Score::getInstance().finaliseScore(
-			m_playerCharacter->getCurrentRotationAngle(),
-			m_playerCharacter->getIsRotating(),
-			std::abs(m_playerCharacter->getPosition().x - targetPosX));
-		SceneManager::getInstance().changeScene(SceneManager::Scene::gameOver);
-		break;
-	}
-	default:
-		break;
-	}
-
-	camera.move({ 0,m_playerCharacter->getPosition().y - playerheight });
 
 	// Draw
-	m_background.drawBG(*m_pEngine, camera);
-	m_playerCharacter->draw(camera);
-	m_background.drawFG(*m_pEngine, camera);
+	m_background.drawBG(*m_pEngine, m_camera);
+
+	if (m_playerCharacter && m_playerCharacter->getIsInitialized() == true)
+		m_playerCharacter->draw(m_camera);
+
+	m_background.drawFG(*m_pEngine, m_camera);
 }

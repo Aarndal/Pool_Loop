@@ -9,12 +9,13 @@
 
 class GameScene : public IScene
 {
-
 public:
-	GameScene(olc::PixelGameEngine* engine);
+	GameScene(olc::PixelGameEngine* pEngine);
 
 	void init(const std::shared_ptr<ISceneData>& data) override;
-	void update(float elapsedTime) override;
+	void update(const float elapsedTime) override;
+
+	[[nodiscard]] float getGravity() const { return m_gravity; }
 
 private:
 	olc::PixelGameEngine* m_pEngine{};
@@ -24,7 +25,7 @@ private:
 
 	std::optional<PlayerCharacter> m_playerCharacter{ };
 
-	float m_gravity{ 10.0f };
+	Camera m_camera;
 
-	Camera camera;
+	float m_gravity{ 10.0f };
 };
