@@ -17,7 +17,7 @@ public:
 	void update(float elapsedTime) override;
 
 private:
-	olc::PixelGameEngine* m_engine{};
+	olc::PixelGameEngine* m_pEngine{};
 	olc::vf2d m_startPosition{ 500.f,300.f };
 
 	GameSceneBackground m_background{6};

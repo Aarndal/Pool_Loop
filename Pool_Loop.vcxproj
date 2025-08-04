@@ -140,6 +140,7 @@
     <ClCompile Include="CharacterSelection.cpp" />
     <ClCompile Include="GameOverScreen.cpp" />
     <ClCompile Include="GameSceneBackground.cpp" />
+    <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="Logo.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="olcPixelGameEngine.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="GameOverScreen.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="GameSceneBackground.h" />
+    <ClInclude Include="InputHandler.h" />
     <ClInclude Include="IScene.h" />
     <ClInclude Include="Logo.h" />
     <ClInclude Include="PlayerCharacter.h" />

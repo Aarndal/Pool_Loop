@@ -1,61 +1,66 @@
-#pragma once
+#ifndef PLAYER_CHARACTER_H
+#define PLAYER_CHARACTER_H
 
 #include <numbers>
 #include <olcPixelGameEngine.h>
 #include "PlayerData.h"
+#include "InputHandler.h"
 #include "Animation.h"
 #include "Score.h"
+#include "Camera.h"
+
 class Camera;
+
+constexpr float START_POSITION_OFFSET{ -650.0f };
 
 class PlayerCharacter
 {
 public:
-	PlayerCharacter(std::shared_ptr<PlayerData> data) : m_data{ std::move(data) }
+	PlayerCharacter(olc::PixelGameEngine* pEngine, std::shared_ptr<PlayerData> data) : m_spData{ std::move(data) }, m_inputHandler{ pEngine }
 	{
-		m_currentAngularSpeed = m_data->getAngularSpeed();
+		m_pEngine = pEngine;
+		m_currentAngularSpeed = m_spData->getAngularSpeed();
 	}
 
-	enum struct State
+	enum struct State : uint8_t
 	{
-		START,
-		WALK,
-		IDLE,
-		JUMP,
-		FALL,
-		END
+		START = 0,
+		WALK = 1,
+		IDLE = 2,
+		JUMP = 3,
+		FALL = 4,
+		END = 5,
 	};
 
-	enum struct Movement
-	{
-		NONE,
-		LEFT,
-		RIGHT,
-	};
-
-	// Initialization methods
+	// Initialisation method
 	void init(const olc::vf2d& startPosition);
 
 	// Getters and Setters
-	bool getIsFalling() const { return m_isFalling; }
-	bool getIsRotating() const { return m_isRotating; }
-	olc::vf2d getPosition() const { return m_currentPosition; }
-	State getCurrentState() const { return m_currentState; }
+	[[nodiscard]] bool getIsFalling() const { return m_isFalling; }
+	[[nodiscard]] bool getIsRotating() const { return m_isRotating; }
+	[[nodiscard]] olc::vf2d getPosition() const { return m_currentPosition; }
+	[[nodiscard]] State getCurrentState() const { return m_currentState; }
 
-	float getCurrentRotationAngle() const { return m_currentRotationAngle; }
-	float getCurrentRotationAngleDegrees() const { return m_currentRotationAngle * 180.0f / static_cast<float>(std::numbers::pi); }
+	[[nodiscard]] float getCurrentRotationAngle() const { return m_currentRotationAngle; }
+	[[nodiscard]] float getCurrentRotationAngleDegrees() const { return m_currentRotationAngle * 180.0f / static_cast<float>(std::numbers::pi); }
 
-	float getCurrentAirResistance(Movement movement);
+	[[nodiscard]] float getCurrentAirResistance(InputHandler::Movement movement);
 
 	// Movement methods
 	bool jump();
-	olc::vf2d moveHorizontal(float elapsedTime, Movement moveDirection);
+	olc::vf2d moveHorizontal(float elapsedTime, InputHandler::Movement moveDirection);
 	olc::vf2d moveVertical(float elapsedTime, float gravity);
-	float rotate(float elapsedTime, olc::PixelGameEngine& engine);
+	float rotate(float elapsedTime);
 
-	bool draw(olc::PixelGameEngine& engine, const Camera& camera);
+	// Animation methods
+	bool draw(const Camera& camera);
 
 private:
-	std::shared_ptr<PlayerData> m_data;
+	// Members
+	olc::PixelGameEngine* m_pEngine{ nullptr };
+	std::shared_ptr<PlayerData> m_spData;
+
+	InputHandler m_inputHandler;
 	Animation m_animator{ {
 			"resources\\PC_Cat_00_Stretched.png",
 			"resources\\PC_Cat_00_Round.png"
@@ -78,8 +83,8 @@ private:
 	olc::vf2d m_jumpStartPosition{ 0.0f, 0.0f };
 	olc::vf2d m_jumpEndPosition{ 0.0f, 0.0f };
 
-
-	bool increaseCurrentRotationAngle(float deltaAngle)
+	// Methods
+	bool increaseCurrentRotationAngle(const float deltaAngle)
 	{
 		if (std::fabs(deltaAngle) > static_cast<float>(2.0 * std::numbers::pi)) // Don't allow rotation angles greater than 360 degrees
 			return false;
@@ -99,17 +104,17 @@ private:
 		return true;
 	}
 
-	bool increaseCurrentRotationAngleDegrees(float deltaAngleDegrees)
+	bool increaseCurrentRotationAngleDegrees(const float deltaAngleDegrees)
 	{
 		if (std::fabs(deltaAngleDegrees) > 360.0f) // Don't allow rotation angles greater than 360 degrees
 			return false;
 
-		float deltaAngle = deltaAngleDegrees * static_cast<float>(std::numbers::pi) / 180.0f;
+		const float deltaAngle = deltaAngleDegrees * static_cast<float>(std::numbers::pi) / 180.0f;
 
 		return increaseCurrentRotationAngle(deltaAngle);
 	}
 
-	bool increaseAngularSpeed(float angularBoost)
+	bool increaseAngularSpeed(const float angularBoost)
 	{
 		if (angularBoost <= 0.0f)
 			return false;
@@ -118,7 +123,7 @@ private:
 		return true;
 	}
 
-	bool increaseAngularBoost(float deltaAngularBoost)
+	bool increaseAngularBoost(const float deltaAngularBoost)
 	{
 		if (deltaAngularBoost <= 0.0f)
 			return false;
@@ -127,3 +132,5 @@ private:
 		return true;
 	}
 };
+
+#endif // PLAYER_CHARACTER_H

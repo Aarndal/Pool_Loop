@@ -1,11 +1,9 @@
 #include "PlayerCharacter.h"
-#include "Camera.h"
-#include "GameSceneBackground.h"
 
 void PlayerCharacter::init(const olc::vf2d& startPosition)
 {
 	m_jumpStartPosition = startPosition;
-	m_currentPosition = { startPosition.x - 650, startPosition.y };
+	m_currentPosition = { startPosition.x + START_POSITION_OFFSET, startPosition.y };
 	m_currentVelocity = { 0.0f, 0.0f };
 	m_currentRotationAngle = 0.0f;
 	m_isFalling = false;
@@ -14,7 +12,7 @@ void PlayerCharacter::init(const olc::vf2d& startPosition)
 	m_isInitialized = true;
 }
 
-float PlayerCharacter::getCurrentAirResistance(Movement movement)
+float PlayerCharacter::getCurrentAirResistance(InputHandler::Movement movement)
 {
 	float currentAirResistance{ 0.15f };
 
@@ -22,10 +20,10 @@ float PlayerCharacter::getCurrentAirResistance(Movement movement)
 	{
 		float lerpFactor{ std::fabs(std::cosf(getCurrentRotationAngle())) };
 
-		if (movement == Movement::NONE)
+		if (movement == InputHandler::Movement::NONE)
 			lerpFactor = 1 - lerpFactor;
 
-		currentAirResistance = std::lerp(m_data->getAirResistance(), 1.0f, lerpFactor);
+		currentAirResistance = std::lerp(m_spData->getAirResistance(), 1.0f, lerpFactor);
 	}
 
 	return currentAirResistance;
@@ -55,11 +53,11 @@ bool PlayerCharacter::jump()
 	return false;
 }
 
-olc::vf2d PlayerCharacter::moveHorizontal(float elapsedTime, PlayerCharacter::Movement moveDirection)
+olc::vf2d PlayerCharacter::moveHorizontal(float elapsedTime, InputHandler::Movement moveDirection)
 {
 	switch (m_currentState)
 	{
-	case PlayerCharacter::State::START:
+	case State::START:
 	{
 		m_currentVelocity.x = 0.0f;
 		m_waitingTime -= elapsedTime;
@@ -71,21 +69,24 @@ olc::vf2d PlayerCharacter::moveHorizontal(float elapsedTime, PlayerCharacter::Mo
 
 		break;
 	}
-	case PlayerCharacter::State::WALK:
+	case State::WALK:
 	{
-		m_currentVelocity.x = m_data->getLinearSpeed();
+		m_currentVelocity.x = m_spData->getLinearSpeed();
 		//TODO: wiggle();
 		break;
 	}
-	case PlayerCharacter::State::FALL:
+	case State::FALL:
 	{
 		switch (moveDirection)
 		{
-		case Movement::LEFT:
-			m_currentVelocity.x = -m_data->getLinearSpeed() / getCurrentAirResistance(moveDirection);
+		case InputHandler::Movement::LEFT:
+			m_currentVelocity.x = -m_spData->getLinearSpeed() / getCurrentAirResistance(moveDirection);
 			break;
-		case Movement::RIGHT:
-			m_currentVelocity.x = m_data->getLinearSpeed() / getCurrentAirResistance(moveDirection);
+		case InputHandler::Movement::RIGHT:
+			m_currentVelocity.x = m_spData->getLinearSpeed() / getCurrentAirResistance(moveDirection);
+			break;
+		case InputHandler::Movement::NONE:
+			m_currentVelocity.x = 0.0f;
 			break;
 		default:
 			m_currentVelocity.x = 0.0f;
@@ -93,7 +94,7 @@ olc::vf2d PlayerCharacter::moveHorizontal(float elapsedTime, PlayerCharacter::Mo
 		}
 		break;
 	}
-	case PlayerCharacter::State::END:
+	case State::END:
 		m_currentVelocity.x = 0.0f;
 		break;
 	default:
@@ -116,7 +117,7 @@ olc::vf2d PlayerCharacter::moveVertical(float elapsedTime, float gravity)
 {
 	switch (m_currentState)
 	{
-	case PlayerCharacter::State::JUMP:
+	case State::JUMP:
 	{
 		//increaseCurrentRotationAngle(acosf(m_jumpDirection.dot(olc::vf2d{ 0.0f, 1.0f })));
 
@@ -133,14 +134,13 @@ olc::vf2d PlayerCharacter::moveVertical(float elapsedTime, float gravity)
 		}
 		break;
 	}
-	case PlayerCharacter::State::FALL:
+	case State::FALL:
 	{
 		m_currentVelocity.y += 0.5f * gravity * elapsedTime;
 
-		if (m_currentVelocity.y > m_data->getMaxFallSpeed())
-			m_currentVelocity.y = m_data->getMaxFallSpeed();
+		m_currentVelocity.y = std::min(m_currentVelocity.y, m_spData->getMaxFallSpeed());
 
-		m_currentVelocity.y /= getCurrentAirResistance(Movement::NONE);
+		m_currentVelocity.y /= getCurrentAirResistance(InputHandler::Movement::NONE);
 
 		m_currentPosition.y += m_currentVelocity.y * elapsedTime;
 		break;
@@ -158,9 +158,9 @@ olc::vf2d PlayerCharacter::moveVertical(float elapsedTime, float gravity)
 	return m_currentPosition;
 }
 
-float PlayerCharacter::rotate(float elapsedTime, olc::PixelGameEngine& engine)
+float PlayerCharacter::rotate(const float elapsedTime)
 {
-	if (engine.GetKey(olc::Key::SPACE).bPressed)
+	if (m_inputHandler.isKeyHeld(olc::Key::SPACE))
 	{
 		m_isRotating = !m_isRotating;
 	}
@@ -175,14 +175,14 @@ float PlayerCharacter::rotate(float elapsedTime, olc::PixelGameEngine& engine)
 
 	if (!m_isRotating)
 	{
-		m_currentAngularSpeed = m_data->getAngularSpeed();
+		m_currentAngularSpeed = m_spData->getAngularSpeed();
 		m_angularBoost = 0.0f;
 	}
 
 	return m_currentRotationAngle;
 }
 
-bool PlayerCharacter::draw(olc::PixelGameEngine& engine, const Camera& camera)
+bool PlayerCharacter::draw(const Camera& camera)
 {
 	int currentImageIndex{ 0 };
 
@@ -191,9 +191,19 @@ bool PlayerCharacter::draw(olc::PixelGameEngine& engine, const Camera& camera)
 		if (m_isRotating)
 			currentImageIndex = 1; // Use the rotated image
 	}
-	if (m_data->getImages()[currentImageIndex].Decal())
+
+	if (m_spData->getImages()[currentImageIndex].Decal())
 	{
-		engine.DrawPartialRotatedDecal(camera.transform(m_currentPosition), m_data->getImages()[currentImageIndex].Decal(), getCurrentRotationAngle(), { 0.5f * (float)m_data->getImages()[currentImageIndex].Sprite()->width,  0.5f * (float)m_data->getImages()[currentImageIndex].Sprite()->height }, {}, m_data->getImages()[currentImageIndex].Sprite()->Size());
+		m_pEngine->DrawPartialRotatedDecal(
+			camera.transform(m_currentPosition),
+			m_spData->getImages()[currentImageIndex].Decal(),
+			getCurrentRotationAngle(),
+			{
+					0.5f * static_cast<float>(m_spData->getImages()[currentImageIndex].Sprite()->width),
+					0.5f * static_cast<float>(m_spData->getImages()[currentImageIndex].Sprite()->height) },
+			{},
+			m_spData->getImages()[currentImageIndex].Sprite()->Size());
 	}
+
 	return true;
 }

@@ -323,7 +323,7 @@
 		  Fixed v2d_generic.clamp() function
 	2.24: Fix FillTexturedTriangle() to remove const-ref
 	2.25: +DrawPolygonDecal(pos, tex, w, col)
-	2.26: Window Manipulation Update! (MS Windows only right now... need volunteers!)
+	2.26: Window Manipulation Update! (MS Windows only RIGHT now... need volunteers!)
 		  +1:1 "Real Window" mode which follows resizing - Construct(...)
 		  +SetWindowSize() - Sets Position/Size of window
 		  +ShowWindowFrame() - Enables/Disables window furniture
@@ -1665,7 +1665,7 @@ namespace olc
 		// components to compile
 		virtual void olc_ConfigureSystem();
 
-		// NOTE: Items Here are to be deprecated, I have left them in for now
+		// NOTE: Items Here are to be deprecated, I have LEFT them in for now
 		// in case you are using them, but they will be removed.
 		// olc::vf2d	vSubPixelOffset = { 0.0f, 0.0f };
 
@@ -2751,16 +2751,16 @@ namespace olc
 			while (y0 >= x0) // only formulate 1/8 of circle
 			{
 				// Draw even octants
-				if (mask & 0x01) Draw(x + x0, y - y0, p);// Q6 - upper right right
-				if (mask & 0x04) Draw(x + y0, y + x0, p);// Q4 - lower lower right
-				if (mask & 0x10) Draw(x - x0, y + y0, p);// Q2 - lower left left
-				if (mask & 0x40) Draw(x - y0, y - x0, p);// Q0 - upper upper left
+				if (mask & 0x01) Draw(x + x0, y - y0, p);// Q6 - upper RIGHT RIGHT
+				if (mask & 0x04) Draw(x + y0, y + x0, p);// Q4 - lower lower RIGHT
+				if (mask & 0x10) Draw(x - x0, y + y0, p);// Q2 - lower LEFT LEFT
+				if (mask & 0x40) Draw(x - y0, y - x0, p);// Q0 - upper upper LEFT
 				if (x0 != 0 && x0 != y0)
 				{
-					if (mask & 0x02) Draw(x + y0, y - x0, p);// Q7 - upper upper right
-					if (mask & 0x08) Draw(x + x0, y + y0, p);// Q5 - lower right right
-					if (mask & 0x20) Draw(x - y0, y + x0, p);// Q3 - lower lower left
-					if (mask & 0x80) Draw(x - x0, y - y0, p);// Q1 - upper left left
+					if (mask & 0x02) Draw(x + y0, y - x0, p);// Q7 - upper upper RIGHT
+					if (mask & 0x08) Draw(x + x0, y + y0, p);// Q5 - lower RIGHT RIGHT
+					if (mask & 0x20) Draw(x - y0, y + x0, p);// Q3 - lower lower LEFT
+					if (mask & 0x80) Draw(x - x0, y - y0, p);// Q1 - upper LEFT LEFT
 				}
 
 				if (d < 0)
@@ -7625,7 +7625,7 @@ namespace olc
 				{
 					// if default shells, apply default styles
 					if (Module.olc_AssumeDefaultShells)
-						Module.canvas.parentNode.setAttribute('style', 'width: 100%; height: 70vh; margin-left: auto; margin-right: auto;');
+						Module.canvas.parentNode.setAttribute('style', 'width: 100%; height: 70vh; margin-LEFT: auto; margin-RIGHT: auto;');
 
 					// apply viewport dimensions to the canvas
 					Module.canvas.setAttribute('width', viewWidth);
@@ -7760,7 +7760,7 @@ namespace olc
 
 
 			//Mouse button press
-			if (e->button == 0) // left click
+			if (e->button == 0) // LEFT click
 			{
 				if (eventType == EMSCRIPTEN_EVENT_MOUSEDOWN)
 					ptrPGE->olc_UpdateMouseState(0, true);
@@ -7768,7 +7768,7 @@ namespace olc
 					ptrPGE->olc_UpdateMouseState(0, false);
 			}
 
-			if (e->button == 2) // right click
+			if (e->button == 2) // RIGHT click
 			{
 				if (eventType == EMSCRIPTEN_EVENT_MOUSEDOWN)
 					ptrPGE->olc_UpdateMouseState(1, true);
