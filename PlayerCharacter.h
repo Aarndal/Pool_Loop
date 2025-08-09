@@ -69,8 +69,8 @@ private:
 
 	InputHandler m_inputHandler;
 	Animation m_animator{ {
-			"resources\\PC_Cat_00_Stretched.png",
-			"resources\\PC_Cat_00_Round.png"
+			"resources/PC_Cat_00_Stretched.png",
+			"resources/PC_Cat_00_Round.png"
 		}, 1.0f };
 
 	State m_currentState{ State::START };

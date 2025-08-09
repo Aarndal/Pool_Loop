@@ -20,14 +20,14 @@ namespace
 
 	Button createButton(olc::vf2d pos, const std::string& name)
 	{
-		return { BoundingBox2D{ pos, buttonSize + pos }, "resources\\Icon_"+ name +".png", [=]()
+		return { BoundingBox2D{ pos, buttonSize + pos }, "resources/Icon_"+ name +".png", [=]()
 			{
 				auto pData = std::make_shared<PlayerData>(1, 0.1f, 75.0f, 120.0f, 200.0f);
 
 				pData->init(
 					{
-								"resources\\PC_" + name + "_Stretched.png",
-								"resources\\PC_" + name + "_Round.png"
+								"resources/PC_" + name + "_Stretched.png",
+								"resources/PC_" + name + "_Round.png"
 					});
 				SceneManager::getInstance().changeScene(SceneManager::Scene::game, pData);;
 			} };
@@ -49,7 +49,7 @@ CharacterSelection::CharacterSelection(olc::PixelGameEngine* pge) : m_pge{pge}
 
 void CharacterSelection::init(const std::shared_ptr<ISceneData>&)
 {
-	m_backgroundImage.Load("resources\\BG_Menu.png");
+	m_backgroundImage.Load("resources/BG_Menu.png");
 	for (auto& button : m_vecButtons)
 	{
 		button.loadImage();

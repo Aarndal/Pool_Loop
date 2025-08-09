@@ -6,25 +6,25 @@ namespace
 	Logo::Letter createL(olc::vf2d pos)
 	{
 		Logo::Letter L{ .pos = pos,.posMax = pos + olc::vf2d{650.f,0},.posMin = pos + olc::vf2d{0.f,0},.dir = {1.f,0.f},.image = {} };
-		L.image.Load("resources\\Title_L.png");
+		L.image.Load("resources/Title_L.png");
 		return L;
 	}
 	Logo::Letter createO_2(olc::vf2d pos)
 	{
 		Logo::Letter O_2{ .pos = pos + olc::vf2d{400.f,0},.posMax = pos + olc::vf2d{400.f,50.f},.posMin = pos + olc::vf2d{400.f,-50.f} ,.dir = {0.f,1.f},.image = {} };
-		O_2.image.Load("resources\\Title_O_2.png");
+		O_2.image.Load("resources/Title_O_2.png");
 		return O_2;
 	}
 	Logo::Letter createO_1(olc::vf2d pos)
 	{
 		Logo::Letter O_1{ .pos = pos + olc::vf2d{200.f,0},.posMax = pos + olc::vf2d{200.f,50.f},.posMin = pos + olc::vf2d{200.f,-50.f} ,.dir = {0.f,-1.f},.image = {} };
-		O_1.image.Load("resources\\Title_O_1.png");
+		O_1.image.Load("resources/Title_O_1.png");
 		return O_1;
 	}
 	Logo::Letter createP(olc::vf2d pos)
 	{
 		Logo::Letter P{ .pos = pos + olc::vf2d{600.f,0},.posMax = pos + olc::vf2d{650.f,0},.posMin = pos + olc::vf2d{0.f,0},.dir = {-1.f,0.f},.image = {} };
-		P.image.Load("resources\\Title_P.png");
+		P.image.Load("resources/Title_P.png");
 		return P;
 	}
 }

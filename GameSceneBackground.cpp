@@ -9,19 +9,19 @@ void GameSceneBackground::load()
 
 	m_vecImagesBG = loadImages(
 		{
-			"resources\\BG_Top.png",
-			"resources\\BG_Middle_1.png",
-			"resources\\BG_Middle_2.png",
-			"resources\\BG_Bottom.png",
+			"resources/BG_Top.png",
+			"resources/BG_Middle_1.png",
+			"resources/BG_Middle_2.png",
+			"resources/BG_Bottom.png",
 		});
 
 	m_vecImagesFG = loadImages(
 		{
-			"resources\\FG_Top.png",
-			"resources\\FG_Bottom.png",
+			"resources/FG_Top.png",
+			"resources/FG_Bottom.png",
 		});
 
-	m_instructions.Load("resources\\Instructions.png");
+	m_instructions.Load("resources/Instructions.png");
 }
 
 

@@ -8,8 +8,8 @@ GameOverScreen::GameOverScreen(olc::PixelGameEngine* pge) : m_pge{pge}
 
 void GameOverScreen::init(const std::shared_ptr<ISceneData>& )
 {
-	m_backgroundImage.Load("resources\\BG_Bottom.png");
-	m_backgroundImageFG.Load("resources\\FG_Bottom.png");
+	m_backgroundImage.Load("resources/BG_Bottom.png");
+	m_backgroundImageFG.Load("resources/FG_Bottom.png");
 }
 
 void GameOverScreen::update(float )
