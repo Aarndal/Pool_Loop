@@ -3,19 +3,17 @@
 #include "GameScene.h"
 #include "SceneManager.h"
 
-void PlayerCharacter::init(const olc::vf2d& startPosition)
+PlayerCharacter::PlayerCharacter(std::shared_ptr<PlayerData> data, InputHandler inputHandler, const olc::vf2d& startPosition) :
+	m_spData{ std::move(data) },
+	m_inputHandler{ std::move(inputHandler) },
+	m_currentPosition { startPosition.x + START_POSITION_OFFSET, startPosition.y },
+	m_jumpStartPosition{ startPosition },
+	m_currentAngularSpeed{ m_spData->getAngularSpeed() }
 {
-	m_jumpStartPosition = startPosition;
-	m_currentPosition = { startPosition.x + START_POSITION_OFFSET, startPosition.y };
-	m_currentVelocity = { 0.0f, 0.0f };
-	m_currentRotationAngle = 0.0f;
-	m_isFalling = false;
-	m_waitingTime = 3.0f;
 
-	m_isInitialized = true;
 }
 
-float PlayerCharacter::getCurrentAirResistance(InputHandler::Movement movement)
+float PlayerCharacter::getCurrentAirResistance(const InputHandler::Movement movement) const
 {
 	float currentAirResistance{ 0.15f };
 
@@ -32,8 +30,10 @@ float PlayerCharacter::getCurrentAirResistance(InputHandler::Movement movement)
 	return currentAirResistance;
 }
 
-void PlayerCharacter::update(const float elapsedTime)
+void PlayerCharacter::update(const float elapsedTime, const GameScene& currentScene)
 {
+	const float gravity = currentScene.getGravity();
+
 	switch (this->getCurrentState())
 	{
 	case State::START:
@@ -52,14 +52,14 @@ void PlayerCharacter::update(const float elapsedTime)
 		break;
 	case State::JUMP:
 	{
-		this->moveVertical(elapsedTime);
+		this->moveVertical(elapsedTime, gravity);
 		break;
 	}
 	case State::FALL:
 	{
 		this->rotate(elapsedTime);
 
-		this->moveVertical(elapsedTime);
+		this->moveVertical(elapsedTime, gravity);
 
 		const InputHandler::Movement currentMoveDirection = m_inputHandler.getMovement();
 
@@ -68,7 +68,7 @@ void PlayerCharacter::update(const float elapsedTime)
 	}
 	case State::END:
 	{
-		const float targetPosX = 1920 - 1600 + 0.5 * 1600;
+		constexpr float targetPosX = 1920 - 1600 + 0.5 * 1600;
 
 		Score::getInstance().finaliseScore(
 			this->getCurrentRotationAngle(),
@@ -93,7 +93,7 @@ void PlayerCharacter::wait(const float elapsedTime)
 
 void PlayerCharacter::jump()
 {
-	olc::vf2d jumpStartPosition = m_currentPosition;
+	const olc::vf2d jumpStartPosition = m_currentPosition;
 
 	m_jumpEndPosition =
 	{
@@ -145,16 +145,14 @@ void PlayerCharacter::moveHorizontal(const float elapsedTime, const InputHandler
 	}
 }
 
-void PlayerCharacter::moveVertical(const float elapsedTime)
+void PlayerCharacter::moveVertical(const float elapsedTime, const float gravity)
 {
 	if (m_currentState == State::JUMP)
 	{
-		//increaseCurrentRotationAngle(acosf(m_jumpDirection.dot(olc::vf2d{ 0.0f, 1.0f })));
-
 		m_currentVelocity = m_jumpDirection * 500.0f;
 		m_currentPosition += m_currentVelocity * elapsedTime;
 
-		float currentJumpHeight = m_jumpEndPosition.y - m_currentPosition.y;
+		const float currentJumpHeight = m_jumpEndPosition.y - m_currentPosition.y;
 
 		if (currentJumpHeight >= 0.0f)
 		{
@@ -165,7 +163,7 @@ void PlayerCharacter::moveVertical(const float elapsedTime)
 	}
 	else if (m_currentState == State::FALL)
 	{
-		m_currentVelocity.y += 0.5f * m_pCurrentScene->getGravity() * elapsedTime;
+		m_currentVelocity.y += 0.5f * gravity * elapsedTime;
 
 		m_currentVelocity.y = std::min(m_currentVelocity.y, m_spData->getMaxFallSpeed());
 
@@ -206,7 +204,7 @@ void PlayerCharacter::rotate(const float elapsedTime)
 	}
 }
 
-bool PlayerCharacter::draw(const Camera& camera)
+bool PlayerCharacter::draw(olc::PixelGameEngine& refEngine, const Camera& camera) const
 {
 	int currentImageIndex{ 0 };
 
@@ -218,7 +216,7 @@ bool PlayerCharacter::draw(const Camera& camera)
 
 	if (m_spData->getImages()[currentImageIndex].Decal())
 	{
-		m_pEngine->DrawPartialRotatedDecal(
+		refEngine.DrawPartialRotatedDecal(
 			camera.transform(m_currentPosition),
 			m_spData->getImages()[currentImageIndex].Decal(),
 			getCurrentRotationAngle(),
@@ -229,5 +227,53 @@ bool PlayerCharacter::draw(const Camera& camera)
 			m_spData->getImages()[currentImageIndex].Sprite()->Size());
 	}
 
+	return true;
+}
+
+bool PlayerCharacter::increaseCurrentRotationAngle(const float deltaAngle)
+{
+	if (std::fabs(deltaAngle) > static_cast<float>(2.0 * std::numbers::pi)) // Don't allow rotation angles greater than 360 degrees
+		return false;
+
+	m_currentRotationAngle += deltaAngle;
+
+	if (m_currentRotationAngle >= static_cast<float>(2.0 * std::numbers::pi))
+	{
+		m_currentRotationAngle -= static_cast<float>(2.0 * std::numbers::pi);
+		Score::getInstance().addRotation();
+	}
+	if (m_currentRotationAngle < 0.0f)
+	{
+		m_currentRotationAngle += static_cast<float>(2.0 * std::numbers::pi);
+		Score::getInstance().addRotation();
+	}
+	return true;
+}
+
+bool PlayerCharacter::increaseCurrentRotationAngleDegrees(const float deltaAngleDegrees)
+{
+	if (std::fabs(deltaAngleDegrees) > 360.0f) // Don't allow rotation angles greater than 360 degrees
+		return false;
+
+	const float deltaAngle = deltaAngleDegrees * static_cast<float>(std::numbers::pi) / 180.0f;
+
+	return increaseCurrentRotationAngle(deltaAngle);
+}
+
+bool PlayerCharacter::increaseAngularSpeed(const float angularBoost)
+{
+	if (angularBoost <= 0.0f)
+		return false;
+
+	m_currentAngularSpeed += angularBoost;
+	return true;
+}
+
+bool PlayerCharacter::increaseAngularBoost(const float deltaAngularBoost)
+{
+	if (deltaAngularBoost <= 0.0f)
+		return false;
+
+	m_angularBoost += deltaAngularBoost;
 	return true;
 }

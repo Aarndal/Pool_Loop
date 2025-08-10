@@ -16,14 +16,10 @@ constexpr float START_POSITION_OFFSET{ -650.0f };
 class PlayerCharacter
 {
 public:
-	PlayerCharacter(olc::PixelGameEngine* pEngine, GameScene* pCurrentGameScene, std::shared_ptr<PlayerData> data) : m_pEngine{ pEngine
-	}, m_pCurrentScene{ pCurrentGameScene }, m_spData{
-		std::move(data)
-	}, m_inputHandler{ pEngine }
-	{
-		m_currentAngularSpeed = m_spData->getAngularSpeed();
-	}
+	// Constructors
+	PlayerCharacter(std::shared_ptr<PlayerData> data, InputHandler inputHandler, const olc::vf2d& startPosition);
 
+	// Enums
 	enum struct State : uint8_t
 	{
 		START = 0,
@@ -38,33 +34,29 @@ public:
 	void init(const olc::vf2d& startPosition);
 
 	// Getters and Setters
-	[[nodiscard]] bool getIsInitialized() const { return m_isInitialized; }
-	[[nodiscard]] bool getIsFalling() const { return m_isFalling; }
 	[[nodiscard]] bool getIsRotating() const { return m_isRotating; }
 	[[nodiscard]] olc::vf2d getPosition() const { return m_currentPosition; }
 	[[nodiscard]] State getCurrentState() const { return m_currentState; }
 
 	[[nodiscard]] float getCurrentRotationAngle() const { return m_currentRotationAngle; }
 	[[nodiscard]] float getCurrentRotationAngleDegrees() const { return m_currentRotationAngle * 180.0f / static_cast<float>(std::numbers::pi); }
+	[[nodiscard]] float getCurrentAirResistance(const InputHandler::Movement movement) const;
 
-	[[nodiscard]] float getCurrentAirResistance(InputHandler::Movement movement);
-
-	void update(float elapsedTime);
+	// Update method
+	void update(const float elapsedTime, const GameScene& currentScene);
 
 	// Movement methods
-	void wait(float elapsedTime);
+	void wait(const float elapsedTime);
 	void jump();
-	void moveHorizontal(float elapsedTime, InputHandler::Movement moveDirection);
-	void moveVertical(float elapsedTime);
-	void rotate(float elapsedTime);
+	void moveHorizontal(const float elapsedTime, const InputHandler::Movement moveDirection);
+	void moveVertical(const float elapsedTime, const float gravity);
+	void rotate(const float elapsedTime);
 
 	// Animation methods
-	bool draw(const Camera& camera);
+	bool draw(olc::PixelGameEngine& refEngine, const Camera& camera) const;
 
 private:
 	// Members
-	olc::PixelGameEngine* m_pEngine{ nullptr };
-	GameScene* m_pCurrentScene;
 	std::shared_ptr<PlayerData> m_spData;
 
 	InputHandler m_inputHandler;
@@ -75,11 +67,9 @@ private:
 
 	State m_currentState{ State::START };
 
-	bool m_isInitialized{ false };
-	bool m_isFalling{ false };
 	bool m_isRotating{ false };
 
-	float m_waitingTime{ 0.0f };
+	float m_waitingTime{ 3.0f };
 	float m_currentRotationAngle{ 0.0f };
 	float m_currentAngularSpeed{ 0.0f };
 	float m_angularBoost{ 1.0f };
@@ -91,53 +81,10 @@ private:
 	olc::vf2d m_jumpEndPosition{ 0.0f, 0.0f };
 
 	// Methods
-	bool increaseCurrentRotationAngle(const float deltaAngle)
-	{
-		if (std::fabs(deltaAngle) > static_cast<float>(2.0 * std::numbers::pi)) // Don't allow rotation angles greater than 360 degrees
-			return false;
-
-		m_currentRotationAngle += deltaAngle;
-
-		if (m_currentRotationAngle >= static_cast<float>(2.0 * std::numbers::pi))
-		{
-			m_currentRotationAngle -= static_cast<float>(2.0 * std::numbers::pi);
-			Score::getInstance().addRotation();
-		}
-		if (m_currentRotationAngle < 0.0f)
-		{
-			m_currentRotationAngle += static_cast<float>(2.0 * std::numbers::pi);
-			Score::getInstance().addRotation();
-		}
-		return true;
-	}
-
-	bool increaseCurrentRotationAngleDegrees(const float deltaAngleDegrees)
-	{
-		if (std::fabs(deltaAngleDegrees) > 360.0f) // Don't allow rotation angles greater than 360 degrees
-			return false;
-
-		const float deltaAngle = deltaAngleDegrees * static_cast<float>(std::numbers::pi) / 180.0f;
-
-		return increaseCurrentRotationAngle(deltaAngle);
-	}
-
-	bool increaseAngularSpeed(const float angularBoost)
-	{
-		if (angularBoost <= 0.0f)
-			return false;
-
-		m_currentAngularSpeed += angularBoost;
-		return true;
-	}
-
-	bool increaseAngularBoost(const float deltaAngularBoost)
-	{
-		if (deltaAngularBoost <= 0.0f)
-			return false;
-
-		m_angularBoost += deltaAngularBoost;
-		return true;
-	}
+	bool increaseCurrentRotationAngle(const float deltaAngle);
+	bool increaseCurrentRotationAngleDegrees(const float deltaAngleDegrees);
+	bool increaseAngularSpeed(const float angularBoost);
+	bool increaseAngularBoost(const float deltaAngularBoost);
 };
 
 #endif // PLAYER_CHARACTER_H

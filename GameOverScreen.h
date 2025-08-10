@@ -5,12 +5,10 @@
 class GameOverScreen : public IScene
 {
 public:
-	GameOverScreen(olc::PixelGameEngine* pge);
-	void init(const std::shared_ptr<ISceneData>& data) override;
-	void update(float time) override;
+	void init(olc::PixelGameEngine& engnie, const std::shared_ptr<ISceneData>& data) override;
+	void update(olc::PixelGameEngine& engnie, float time) override;
 private:
 	olc::Renderable m_backgroundImage;
 	olc::Renderable m_backgroundImageFG;
-	olc::PixelGameEngine* m_pge;
 };
 

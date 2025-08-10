@@ -36,18 +36,23 @@ namespace
 
 
 
-CharacterSelection::CharacterSelection(olc::PixelGameEngine* pge) : m_pge{pge}
+void CharacterSelection::init(olc::PixelGameEngine& , const std::shared_ptr<ISceneData>&)
+{
+	createButtons();
+	loadResources();
+}
+
+void CharacterSelection::createButtons()
 {
 	olc::vf2d pos{ 300,200 };
 	for (const auto& name : vecCharacterNames)
 	{
-		m_vecButtons.emplace_back(createButton(pos,name));
+		m_vecButtons.emplace_back(createButton(pos, name));
 		pos.x += 150;
 	}
 }
 
-
-void CharacterSelection::init(const std::shared_ptr<ISceneData>&)
+void CharacterSelection::loadResources()
 {
 	m_backgroundImage.Load("resources/BG_Menu.png");
 	for (auto& button : m_vecButtons)
@@ -56,12 +61,12 @@ void CharacterSelection::init(const std::shared_ptr<ISceneData>&)
 	}
 }
 
-void CharacterSelection::update(float /*time*/)
+void CharacterSelection::update(olc::PixelGameEngine& engine, float /*time*/)
 {
-	m_pge->DrawDecal({}, m_backgroundImage.Decal());
+	engine.DrawDecal({}, m_backgroundImage.Decal());
 
 	for (auto& button : m_vecButtons)
 	{
-		button.update(m_pge);
+		button.update(engine);
 	}
 }
