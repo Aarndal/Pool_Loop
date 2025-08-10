@@ -8,18 +8,15 @@
 
 setlocal enabledelayedexpansion enableextensions
 
-:: Customize here ===========================================
+set WORKINGDIR="C:\Repos\Pool_Loop"
 
 :: Location of Emscripten SDK
 set EMSDK="C:\sdks\emscripten\emsdk"
 
 :: Location of olc::PixelGameEngine header file
-set OLCPGE=".\"
-set OLCPGE="C:\Repos\TetRiss\olcPixelGameEngine"
+set OLCPGE= "C:\Repos\Pool_Loop\olcPixelGameEngine"
 
 :: ==========================================================
-
-set WORKINGDIR="C:\Repos\Pool_Loop"
 
 if not exist %EMSDK% (
 	echo Error: No Emscripten SDK folder found!
@@ -65,7 +62,7 @@ goto :error
 echo %CPP%
 	if exist "./resources" (
 		echo Starting Build with assets...
-		call em++ -g -std=c++20 -O2 -s ALLOW_MEMORY_GROWTH=1 -s MAX_WEBGL_VERSION=2 -s MIN_WEBGL_VERSION=2 -s USE_LIBPNG=1 %CPP% -o .\WASM\pge.html -I %OLCPGE% --preload-file .\resources
+		call em++ -std=c++20 -O2 -s ALLOW_MEMORY_GROWTH=1 -s MAX_WEBGL_VERSION=2 -s MIN_WEBGL_VERSION=2 -s USE_LIBPNG=1 %CPP% -o .\WASM\pge.html -I %OLCPGE% --preload-file .\resources
 	) else (
 		echo Starting Build without assets...
 		call em++ -std=c++17 -O1 -s ALLOW_MEMORY_GROWTH=1 -s MAX_WEBGL_VERSION=2 -s MIN_WEBGL_VERSION=2 -s USE_LIBPNG=1 %CPP% -o .\WASM\pge.html -I %OLCPGE%
