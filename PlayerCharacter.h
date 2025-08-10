@@ -30,9 +30,6 @@ public:
 		END = 5,
 	};
 
-	// Initialisation method
-	void init(const olc::vf2d& startPosition);
-
 	// Getters and Setters
 	[[nodiscard]] bool getIsRotating() const { return m_isRotating; }
 	[[nodiscard]] olc::vf2d getPosition() const { return m_currentPosition; }
