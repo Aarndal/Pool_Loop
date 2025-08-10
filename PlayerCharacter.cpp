@@ -206,7 +206,7 @@ void PlayerCharacter::rotate(const float elapsedTime)
 	}
 }
 
-bool PlayerCharacter::draw(const Camera& camera)
+bool PlayerCharacter::draw(olc::PixelGameEngine& refEngine, const Camera& camera) const
 {
 	int currentImageIndex{ 0 };
 
@@ -218,7 +218,7 @@ bool PlayerCharacter::draw(const Camera& camera)
 
 	if (m_spData->getImages()[currentImageIndex].Decal())
 	{
-		m_pEngine->DrawPartialRotatedDecal(
+		refEngine.DrawPartialRotatedDecal(
 			camera.transform(m_currentPosition),
 			m_spData->getImages()[currentImageIndex].Decal(),
 			getCurrentRotationAngle(),

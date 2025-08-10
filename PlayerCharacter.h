@@ -16,10 +16,10 @@ constexpr float START_POSITION_OFFSET{ -650.0f };
 class PlayerCharacter
 {
 public:
-	PlayerCharacter(olc::PixelGameEngine* pEngine, GameScene* pCurrentGameScene, std::shared_ptr<PlayerData> data) : m_pEngine{ pEngine
-	}, m_pCurrentScene{ pCurrentGameScene }, m_spData{
-		std::move(data)
-	}, m_inputHandler{ pEngine }
+	PlayerCharacter(olc::PixelGameEngine* pEngine, GameScene* pCurrentGameScene, std::shared_ptr<PlayerData> data) :
+	m_pCurrentScene{ pCurrentGameScene },
+	m_spData{ std::move(data) },
+	m_inputHandler{ pEngine }
 	{
 		m_currentAngularSpeed = m_spData->getAngularSpeed();
 	}
@@ -59,11 +59,11 @@ public:
 	void rotate(float elapsedTime);
 
 	// Animation methods
-	bool draw(const Camera& camera);
+	bool draw(olc::PixelGameEngine& refEngine, const Camera& camera) const;
 
 private:
+
 	// Members
-	olc::PixelGameEngine* m_pEngine{ nullptr };
 	GameScene* m_pCurrentScene;
 	std::shared_ptr<PlayerData> m_spData;
 

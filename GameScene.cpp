@@ -53,7 +53,7 @@ void GameScene::update(const float elapsedTime)
 	m_background.drawBG(*m_pEngine, m_camera);
 
 	if (m_playerCharacter && m_playerCharacter->getIsInitialized() == true)
-		m_playerCharacter->draw(m_camera);
+		m_playerCharacter->draw(*m_pEngine, m_camera);
 
 	m_background.drawFG(*m_pEngine, m_camera);
 }
