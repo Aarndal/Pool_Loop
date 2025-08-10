@@ -7,7 +7,7 @@
 
 namespace
 {
-    std::unique_ptr<IScene> createSchene(SceneManager::Scene newSchene)
+    std::unique_ptr<IScene> createScene(SceneManager::Scene newSchene)
     {
         using enum SceneManager::Scene;
         switch (newSchene)
@@ -37,7 +37,7 @@ IScene* SceneManager::getCurrentScene(olc::PixelGameEngine& pge)
 {
     if (m_nextScene)
     {
-        m_currentScene = createSchene(m_nextScene->id);
+        m_currentScene = createScene(m_nextScene->id);
         if (m_currentScene)
         {
             m_currentScene->init(pge, m_nextScene->data);
