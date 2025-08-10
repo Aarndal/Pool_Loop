@@ -26,7 +26,7 @@ void GameScene::init(const std::shared_ptr<ISceneData>& data)
 
 	if (!m_playerCharacter)
 	{
-		m_playerCharacter = { m_pEngine, this, std::move(playerData) };
+		m_playerCharacter = { m_pEngine, std::move(playerData) };
 	}
 
 	if (m_playerCharacter->getIsInitialized() == false)
@@ -44,7 +44,7 @@ void GameScene::update(const float elapsedTime)
 	{
 		const auto playerHeight = m_playerCharacter->getPosition().y;
 
-		m_playerCharacter->update(elapsedTime);
+		m_playerCharacter->update(elapsedTime, *this);
 
 		m_camera.move({ 0,m_playerCharacter->getPosition().y - playerHeight });
 	}

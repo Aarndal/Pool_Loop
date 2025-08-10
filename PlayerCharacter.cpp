@@ -32,8 +32,10 @@ float PlayerCharacter::getCurrentAirResistance(InputHandler::Movement movement)
 	return currentAirResistance;
 }
 
-void PlayerCharacter::update(const float elapsedTime)
+void PlayerCharacter::update(const float elapsedTime, const GameScene& currentScene)
 {
+	const float gravity = currentScene.getGravity();
+
 	switch (this->getCurrentState())
 	{
 	case State::START:
@@ -52,14 +54,14 @@ void PlayerCharacter::update(const float elapsedTime)
 		break;
 	case State::JUMP:
 	{
-		this->moveVertical(elapsedTime);
+		this->moveVertical(elapsedTime, gravity);
 		break;
 	}
 	case State::FALL:
 	{
 		this->rotate(elapsedTime);
 
-		this->moveVertical(elapsedTime);
+		this->moveVertical(elapsedTime, gravity);
 
 		const InputHandler::Movement currentMoveDirection = m_inputHandler.getMovement();
 
@@ -145,7 +147,7 @@ void PlayerCharacter::moveHorizontal(const float elapsedTime, const InputHandler
 	}
 }
 
-void PlayerCharacter::moveVertical(const float elapsedTime)
+void PlayerCharacter::moveVertical(const float elapsedTime, const float gravity)
 {
 	if (m_currentState == State::JUMP)
 	{
@@ -165,7 +167,7 @@ void PlayerCharacter::moveVertical(const float elapsedTime)
 	}
 	else if (m_currentState == State::FALL)
 	{
-		m_currentVelocity.y += 0.5f * m_pCurrentScene->getGravity() * elapsedTime;
+		m_currentVelocity.y += 0.5f * gravity * elapsedTime;
 
 		m_currentVelocity.y = std::min(m_currentVelocity.y, m_spData->getMaxFallSpeed());
 

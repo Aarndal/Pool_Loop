@@ -16,8 +16,7 @@ constexpr float START_POSITION_OFFSET{ -650.0f };
 class PlayerCharacter
 {
 public:
-	PlayerCharacter(olc::PixelGameEngine* pEngine, GameScene* pCurrentGameScene, std::shared_ptr<PlayerData> data) :
-	m_pCurrentScene{ pCurrentGameScene },
+	PlayerCharacter(olc::PixelGameEngine* pEngine, std::shared_ptr<PlayerData> data) :
 	m_spData{ std::move(data) },
 	m_inputHandler{ pEngine }
 	{
@@ -49,22 +48,20 @@ public:
 
 	[[nodiscard]] float getCurrentAirResistance(InputHandler::Movement movement);
 
-	void update(float elapsedTime);
+	void update(const float elapsedTime, const GameScene& currentScene);
 
 	// Movement methods
-	void wait(float elapsedTime);
+	void wait(const float elapsedTime);
 	void jump();
-	void moveHorizontal(float elapsedTime, InputHandler::Movement moveDirection);
-	void moveVertical(float elapsedTime);
-	void rotate(float elapsedTime);
+	void moveHorizontal(const float elapsedTime, const InputHandler::Movement moveDirection);
+	void moveVertical(const float elapsedTime, const float gravity);
+	void rotate(const float elapsedTime);
 
 	// Animation methods
 	bool draw(olc::PixelGameEngine& refEngine, const Camera& camera) const;
 
 private:
-
 	// Members
-	GameScene* m_pCurrentScene;
 	std::shared_ptr<PlayerData> m_spData;
 
 	InputHandler m_inputHandler;
