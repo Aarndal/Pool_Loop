@@ -6,13 +6,14 @@
 class CharacterSelection : public IScene
 {
 public:
-	CharacterSelection(olc::PixelGameEngine* pge);
-	void init(const std::shared_ptr<ISceneData>& data = nullptr) override;
-	void update(float time) override;
+	void init(olc::PixelGameEngine& engine, const std::shared_ptr<ISceneData>& data = nullptr) override;
+	void update(olc::PixelGameEngine& engine, float time) override;
 
 private:
+	void createButtons();
+	void loadResources();
+
 	olc::Renderable m_backgroundImage;
-	olc::PixelGameEngine* m_pge;
 	std::vector<Button> m_vecButtons;
 };
 

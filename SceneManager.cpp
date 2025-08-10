@@ -7,18 +7,18 @@
 
 namespace
 {
-    std::unique_ptr<IScene> createSchene(SceneManager::Scene newSchene, olc::PixelGameEngine* pge)
+    std::unique_ptr<IScene> createSchene(SceneManager::Scene newSchene)
     {
         using enum SceneManager::Scene;
         switch (newSchene)
         {
-        case mainMenu:              return std::make_unique<MainMenu>(pge);
-        case characterSelection:    return std::make_unique<CharacterSelection>(pge);
-        case game:                  return std::make_unique<GameScene>(pge);
-        case gameOver:              return std::make_unique<GameOverScreen>(pge);
+        case mainMenu:              return std::make_unique<MainMenu>();
+        case characterSelection:    return std::make_unique<CharacterSelection>();
+        case game:                  return std::make_unique<GameScene>();
+        case gameOver:              return std::make_unique<GameOverScreen>();
         case quit:                  return nullptr;
         }
-        return std::make_unique<MainMenu>(pge);
+        return std::make_unique<MainMenu>();
     }
 }
 
@@ -33,14 +33,14 @@ void SceneManager::changeScene(Scene newScene, const std::shared_ptr<ISceneData>
     m_nextScene = { newScene, data };
 }
 
-IScene* SceneManager::getCurrentScene(olc::PixelGameEngine* pge)
+IScene* SceneManager::getCurrentScene(olc::PixelGameEngine& pge)
 {
     if (m_nextScene)
     {
-        m_currentScene = createSchene(m_nextScene->id, pge);
+        m_currentScene = createSchene(m_nextScene->id);
         if (m_currentScene)
         {
-            m_currentScene->init(m_nextScene->data);
+            m_currentScene->init(pge, m_nextScene->data);
         }
         m_nextScene = std::nullopt;
     }

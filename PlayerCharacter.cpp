@@ -3,15 +3,14 @@
 #include "GameScene.h"
 #include "SceneManager.h"
 
-void PlayerCharacter::init(const olc::vf2d& startPosition)
+PlayerCharacter::PlayerCharacter(std::shared_ptr<PlayerData> data, InputHandler inputHandler, const olc::vf2d& startPosition) :
+	m_spData{ std::move(data) },
+	m_inputHandler{ std::move(inputHandler) },
+	m_currentPosition { startPosition.x + START_POSITION_OFFSET, startPosition.y },
+	m_jumpStartPosition{ startPosition },
+	m_currentAngularSpeed{ m_spData->getAngularSpeed() }
 {
-	m_jumpStartPosition = startPosition;
-	m_currentPosition = { startPosition.x + START_POSITION_OFFSET, startPosition.y };
-	m_currentVelocity = { 0.0f, 0.0f };
-	m_currentRotationAngle = 0.0f;
-	m_waitingTime = 3.0f;
 
-	m_isInitialized = true;
 }
 
 float PlayerCharacter::getCurrentAirResistance(const InputHandler::Movement movement) const

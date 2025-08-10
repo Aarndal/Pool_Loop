@@ -23,7 +23,7 @@ public:
 		quit
 	};
 	void changeScene(Scene newSchene, const std::shared_ptr<ISceneData>& data = nullptr);
-	IScene* getCurrentScene(olc::PixelGameEngine* pge);
+	IScene* getCurrentScene(olc::PixelGameEngine& pge);
 
 	struct NextScene
 	{

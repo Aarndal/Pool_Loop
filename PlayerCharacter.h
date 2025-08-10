@@ -17,12 +17,7 @@ class PlayerCharacter
 {
 public:
 	// Constructors
-	PlayerCharacter(olc::PixelGameEngine* pEngine, std::shared_ptr<PlayerData> data) :
-	m_spData{ std::move(data) },
-	m_inputHandler{ pEngine }
-	{
-		m_currentAngularSpeed = m_spData->getAngularSpeed();
-	}
+	PlayerCharacter(std::shared_ptr<PlayerData> data, InputHandler inputHandler, const olc::vf2d& startPosition);
 
 	// Enums
 	enum struct State : uint8_t
@@ -39,7 +34,6 @@ public:
 	void init(const olc::vf2d& startPosition);
 
 	// Getters and Setters
-	[[nodiscard]] bool getIsInitialized() const { return m_isInitialized; }
 	[[nodiscard]] bool getIsRotating() const { return m_isRotating; }
 	[[nodiscard]] olc::vf2d getPosition() const { return m_currentPosition; }
 	[[nodiscard]] State getCurrentState() const { return m_currentState; }
@@ -73,10 +67,9 @@ private:
 
 	State m_currentState{ State::START };
 
-	bool m_isInitialized{ false };
 	bool m_isRotating{ false };
 
-	float m_waitingTime{ 0.0f };
+	float m_waitingTime{ 3.0f };
 	float m_currentRotationAngle{ 0.0f };
 	float m_currentAngularSpeed{ 0.0f };
 	float m_angularBoost{ 1.0f };

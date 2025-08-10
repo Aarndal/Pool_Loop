@@ -34,7 +34,7 @@ public:
 
 	void loadImage();
 
-	void update(olc::PixelGameEngine* pge);
+	void update(olc::PixelGameEngine& pge);
 
 	enum class DrawingState
 	{
@@ -46,7 +46,7 @@ public:
 private:
 	bool hit(olc::vf2d point)const;
 	void invoke() const;
-	void draw(olc::PixelGameEngine* pge, DrawingState state = DrawingState::none) const;
+	void draw(olc::PixelGameEngine& pge, DrawingState state = DrawingState::none) const;
 	bool m_bPressed{ false };
 
 	BoundingBox2D m_bb;
