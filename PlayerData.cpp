@@ -9,8 +9,8 @@ bool PlayerData::init(const std::vector<std::filesystem::path>& vecImagePaths)
 	{
 		m_images = loadImages(
 			{
-				"resources\\PC_Cat_00_Stretched.png",
-				"resources\\PC_Cat_00_Round.png"
+				"resources/PC_Cat_00_Stretched.png",
+				"resources/PC_Cat_00_Round.png"
 			});
 		return false;
 	}

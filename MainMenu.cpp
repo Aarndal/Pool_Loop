@@ -16,6 +16,7 @@ void MainMenu::init(olc::PixelGameEngine& engine, const std::shared_ptr<ISceneDa
 	m_vecButtons.emplace_back(BoundingBox2D{ posQuit,buttonSize + posQuit }, "resources\\Button_Quit.png", [=]() {SceneManager::getInstance().changeScene(SceneManager::Scene::quit); });
 
 	m_backgroundImage.Load("resources\\BG_Menu.png");
+  
 	for (auto& button : m_vecButtons)
 	{
 		button.loadImage();
