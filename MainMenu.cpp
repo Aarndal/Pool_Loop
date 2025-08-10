@@ -12,10 +12,10 @@ void MainMenu::init(olc::PixelGameEngine& engine, const std::shared_ptr<ISceneDa
 	const olc::vf2d posStart = { posX,500 };
 	const olc::vf2d posQuit = { posX,650 };
 
-	m_vecButtons.emplace_back(BoundingBox2D{ posStart,buttonSize + posStart }, "resources\\Button_Start.png", [=]() {SceneManager::getInstance().changeScene(SceneManager::Scene::characterSelection); });
-	m_vecButtons.emplace_back(BoundingBox2D{ posQuit,buttonSize + posQuit }, "resources\\Button_Quit.png", [=]() {SceneManager::getInstance().changeScene(SceneManager::Scene::quit); });
+	m_vecButtons.emplace_back(BoundingBox2D{ posStart,buttonSize + posStart }, "resources/Button_Start.png", [=]() {SceneManager::getInstance().changeScene(SceneManager::Scene::characterSelection); });
+	m_vecButtons.emplace_back(BoundingBox2D{ posQuit,buttonSize + posQuit }, "resources/Button_Quit.png", [=]() {SceneManager::getInstance().changeScene(SceneManager::Scene::quit); });
 
-	m_backgroundImage.Load("resources\\BG_Menu.png");
+	m_backgroundImage.Load("resources/BG_Menu.png");
   
 	for (auto& button : m_vecButtons)
 	{
