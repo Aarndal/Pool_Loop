@@ -16,6 +16,7 @@ constexpr float START_POSITION_OFFSET{ -650.0f };
 class PlayerCharacter
 {
 public:
+	// Constructors
 	PlayerCharacter(olc::PixelGameEngine* pEngine, std::shared_ptr<PlayerData> data) :
 	m_spData{ std::move(data) },
 	m_inputHandler{ pEngine }
@@ -23,6 +24,7 @@ public:
 		m_currentAngularSpeed = m_spData->getAngularSpeed();
 	}
 
+	// Enums
 	enum struct State : uint8_t
 	{
 		START = 0,
@@ -38,16 +40,15 @@ public:
 
 	// Getters and Setters
 	[[nodiscard]] bool getIsInitialized() const { return m_isInitialized; }
-	[[nodiscard]] bool getIsFalling() const { return m_isFalling; }
 	[[nodiscard]] bool getIsRotating() const { return m_isRotating; }
 	[[nodiscard]] olc::vf2d getPosition() const { return m_currentPosition; }
 	[[nodiscard]] State getCurrentState() const { return m_currentState; }
 
 	[[nodiscard]] float getCurrentRotationAngle() const { return m_currentRotationAngle; }
 	[[nodiscard]] float getCurrentRotationAngleDegrees() const { return m_currentRotationAngle * 180.0f / static_cast<float>(std::numbers::pi); }
+	[[nodiscard]] float getCurrentAirResistance(const InputHandler::Movement movement) const;
 
-	[[nodiscard]] float getCurrentAirResistance(InputHandler::Movement movement);
-
+	// Update method
 	void update(const float elapsedTime, const GameScene& currentScene);
 
 	// Movement methods
@@ -73,7 +74,6 @@ private:
 	State m_currentState{ State::START };
 
 	bool m_isInitialized{ false };
-	bool m_isFalling{ false };
 	bool m_isRotating{ false };
 
 	float m_waitingTime{ 0.0f };
@@ -88,53 +88,10 @@ private:
 	olc::vf2d m_jumpEndPosition{ 0.0f, 0.0f };
 
 	// Methods
-	bool increaseCurrentRotationAngle(const float deltaAngle)
-	{
-		if (std::fabs(deltaAngle) > static_cast<float>(2.0 * std::numbers::pi)) // Don't allow rotation angles greater than 360 degrees
-			return false;
-
-		m_currentRotationAngle += deltaAngle;
-
-		if (m_currentRotationAngle >= static_cast<float>(2.0 * std::numbers::pi))
-		{
-			m_currentRotationAngle -= static_cast<float>(2.0 * std::numbers::pi);
-			Score::getInstance().addRotation();
-		}
-		if (m_currentRotationAngle < 0.0f)
-		{
-			m_currentRotationAngle += static_cast<float>(2.0 * std::numbers::pi);
-			Score::getInstance().addRotation();
-		}
-		return true;
-	}
-
-	bool increaseCurrentRotationAngleDegrees(const float deltaAngleDegrees)
-	{
-		if (std::fabs(deltaAngleDegrees) > 360.0f) // Don't allow rotation angles greater than 360 degrees
-			return false;
-
-		const float deltaAngle = deltaAngleDegrees * static_cast<float>(std::numbers::pi) / 180.0f;
-
-		return increaseCurrentRotationAngle(deltaAngle);
-	}
-
-	bool increaseAngularSpeed(const float angularBoost)
-	{
-		if (angularBoost <= 0.0f)
-			return false;
-
-		m_currentAngularSpeed += angularBoost;
-		return true;
-	}
-
-	bool increaseAngularBoost(const float deltaAngularBoost)
-	{
-		if (deltaAngularBoost <= 0.0f)
-			return false;
-
-		m_angularBoost += deltaAngularBoost;
-		return true;
-	}
+	bool increaseCurrentRotationAngle(const float deltaAngle);
+	bool increaseCurrentRotationAngleDegrees(const float deltaAngleDegrees);
+	bool increaseAngularSpeed(const float angularBoost);
+	bool increaseAngularBoost(const float deltaAngularBoost);
 };
 
 #endif // PLAYER_CHARACTER_H
